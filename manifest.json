@@ -9,5 +9,8 @@
   "display": "standalone",
   "background_color": "#111111",
   "theme_color": "#8b5cf6",
-  "icons": []
+  "lang": "id",
+  "categories": [
+    "education"
+  ]
 }
