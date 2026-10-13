@@ -1,77 +1,28 @@
 
 {
   "id": "/Senar/",
-  "name": "SENAR — Latihan Gitar",
+  "name": "SENAR - Latihan Gitar",
   "short_name": "SENAR",
-  "description": "Belajar gitar dari dasar, mengenal chord, melatih teknik, memahami teori musik, menggunakan metronom, dan menyetem gitar.",
+  "description": "Belajar gitar dengan SENAR",
   "lang": "id-ID",
-  "dir": "ltr",
-
   "start_url": "/Senar/",
   "scope": "/Senar/",
   "display": "standalone",
-  "display_override": [
-    "standalone",
-    "minimal-ui"
-  ],
-  "orientation": "portrait-primary",
-
+  "orientation": "portrait",
   "background_color": "#11130f",
   "theme_color": "#c9f06a",
-
-  "categories": [
-    "education",
-    "music",
-    "entertainment"
-  ],
-
   "icons": [
     {
-      "src": "./icon-192.png",
+      "src": "/Senar/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icon-512.png",
+      "src": "/Senar/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
-    },
-    {
-      "src": "./icon-maskable-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
-  ],
-
-  "shortcuts": [
-    {
-      "name": "Belajar Gitar",
-      "short_name": "Belajar",
-      "description": "Buka materi latihan gitar",
-      "url": "/Senar/#belajar",
-      "icons": [
-        {
-          "src": "./icon-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Metronom",
-      "short_name": "Metronom",
-      "description": "Buka fitur metronom",
-      "url": "/Senar/#metronom",
-      "icons": [
-        {
-          "src": "./icon-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
     }
   ]
 }
