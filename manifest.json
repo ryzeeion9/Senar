@@ -1,0 +1,13 @@
+
+{
+  "id": "/Senar/",
+  "name": "SENAR - Latihan Gitar",
+  "short_name": "SENAR",
+  "description": "Belajar gitar dengan SENAR",
+  "start_url": "/Senar/",
+  "scope": "/Senar/",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#8b5cf6",
+  "icons": []
+}
