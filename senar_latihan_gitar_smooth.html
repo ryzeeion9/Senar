@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Senar — Latihan Gitar</title>
+<style>
+:root{color-scheme:dark;--bg:#11130f;--panel:#191c17;--panel2:#24281f;--line:#30372a;--text:#f3f4ec;--muted:#aab19e;--accent:#c9f06a;--accent2:#8da83f;--red:#ff927e}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,select,input{font:inherit}button{cursor:pointer;border:0}
+.app{max-width:1040px;margin:auto;padding:clamp(16px,3vw,32px) 18px 48px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:850;font-size:1.2rem;letter-spacing:-.04em}.logo{width:42px;height:42px;border-radius:14px;background:var(--accent);display:grid;place-items:center;color:#17200a;font-size:23px}
+.tag{color:var(--muted);font-size:.8rem}.pill{border:1px solid var(--line);border-radius:999px;padding:9px 13px;color:var(--muted);font-size:.82rem}
+.hero{display:grid;grid-template-columns:1.25fr .75fr;gap:18px;margin-bottom:18px}
+.hero-main{background:linear-gradient(130deg,#252b1c,#1a1c19 70%);border:1px solid #3a432b;border-radius:26px;padding:clamp(23px,4vw,36px);min-height:220px;position:relative;overflow:hidden}
+.eyebrow{font-size:.75rem;color:var(--accent);font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+h1{font-size:clamp(2rem,5vw,3.25rem);line-height:1.02;letter-spacing:-.06em;margin:13px 0}.hero p{color:#c4c8b9;max-width:460px;line-height:1.6;margin:0 0 20px}
+.primary{background:var(--accent);color:#1a2110;border-radius:12px;padding:12px 17px;font-weight:850}.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:11px 14px;font-weight:700}
+.hero-art{position:absolute;right:16px;bottom:-38px;font-size:145px;opacity:.16;transform:rotate(-18deg);pointer-events:none}
+.daily{border:1px solid var(--line);background:var(--panel);border-radius:26px;padding:24px;display:flex;flex-direction:column;justify-content:space-between}
+.daily-top{display:flex;justify-content:space-between;align-items:center}.streak{font-size:2.6rem;font-weight:900;letter-spacing:-.07em}.streak small{font-size:.95rem;color:var(--muted);letter-spacing:0;font-weight:600}
+.progress{height:8px;background:#34382f;border-radius:10px;overflow:hidden;margin:14px 0}.progress span{display:block;height:100%;width:0;background:var(--accent);border-radius:10px;transition:width .25s}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:28px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px}.stat b{display:block;font-size:1.35rem;letter-spacing:-.04em}.stat span{font-size:.78rem;color:var(--muted)}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:26px 0 14px}.section-head h2{margin:0;font-size:1.35rem;letter-spacing:-.04em}.section-head p{margin:5px 0 0;color:var(--muted);font-size:.85rem}
+.tabs{display:flex;gap:7px;flex-wrap:wrap}.tab{background:transparent;color:var(--muted);padding:9px 12px;border-radius:10px}.tab.active{background:var(--accent);color:#1b2110;font-weight:800}
+.chords{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.chord{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:14px 10px;text-align:center;transition:transform .15s,border-color .15s}.chord:hover{transform:translateY(-2px);border-color:var(--accent2)}.chord strong{font-size:1.25rem}.chord small{display:block;color:var(--muted);font-size:.72rem;margin:3px 0 8px}.chord svg{width:100%;max-width:105px;height:108px;display:block;margin:auto}.chord button{margin-top:7px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;color:var(--text);padding:7px 8px;font-size:.75rem;width:100%}
+.practice-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;max-width:680px}.tool{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:20px}.tool h3{margin:0 0 7px;font-size:1.05rem}.tool p{color:var(--muted);font-size:.85rem;line-height:1.5;margin:0 0 16px}
+.metronome-display{text-align:center;padding:12px 0}.bpm{font-size:3.2rem;font-weight:900;letter-spacing:-.07em}.bpm small{font-size:.9rem;color:var(--muted);letter-spacing:0}.beat{display:flex;justify-content:center;gap:9px;margin:10px 0 15px}.beat i{width:12px;height:12px;border-radius:50%;background:#454a3d}.beat i.on{background:var(--accent);box-shadow:0 0 16px #c9f06666}
+.control-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.control-row label{font-size:.8rem;color:var(--muted)}input[type=range]{accent-color:var(--accent);width:100%;margin:10px 0 15px}select{background:var(--panel2);color:var(--text);border:1px solid var(--line);padding:9px;border-radius:10px}
+.timer-face{text-align:center;font-size:3rem;font-weight:900;letter-spacing:-.06em;padding:12px 0}.timer-options{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-bottom:10px}.timer-options button{background:var(--panel2);color:var(--muted);padding:7px 10px;border-radius:9px}.timer-options button.active{background:#333d22;color:var(--accent)}
+.lesson-list{display:grid;gap:9px}.lesson{display:flex;align-items:center;gap:12px;padding:13px;background:var(--panel);border:1px solid var(--line);border-radius:14px}.lesson .num{width:37px;height:37px;display:grid;place-items:center;border-radius:12px;background:var(--panel2);font-weight:800;color:var(--accent)}.lesson div:nth-child(2){flex:1}.lesson strong{display:block;font-size:.9rem}.lesson small{color:var(--muted)}.lesson .done{background:var(--accent);color:#17200a;border-radius:9px;padding:8px 10px;font-size:.78rem;font-weight:800}
+.note{margin-top:24px;border-top:1px solid var(--line);padding-top:17px;color:var(--muted);font-size:.78rem;line-height:1.6}
+@media(max-width:760px){.hero{grid-template-columns:1fr}.hero-main{min-height:240px}.chords{grid-template-columns:repeat(3,1fr)}.practice-grid{grid-template-columns:1fr}.app{padding:16px 13px 30px}.hero-main{padding:23px}.daily{min-height:190px}}
+@media(min-width:761px) and (max-width:980px){.chords{grid-template-columns:repeat(3,1fr)}}
+
+.chord-open{appearance:none;color:var(--text);font:inherit;cursor:pointer;min-height:245px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:7px;padding:12px 8px}
+.chord-open strong{font-size:1.35rem}.chord-open small{font-size:.75rem;color:var(--muted);min-height:2em}.chord-open svg{width:100%;max-width:145px;height:142px;display:block;margin:0 auto}.open-hint{font-size:.72rem;color:var(--accent);margin-top:auto}
+.chord-detail{display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;padding:16px}
+.chord-detail.open{display:flex}.detail-backdrop{position:absolute;inset:0;background:#050604d9;backdrop-filter:blur(6px)}
+.detail-sheet{position:relative;width:min(600px,100%);max-height:90dvh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:25px;box-shadow:0 20px 90px #0008}
+.detail-close{float:right;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:9px 12px}
+.detail-sheet h2{font-size:2rem;margin:8px 0 18px}.detail-content{display:grid;grid-template-columns:220px 1fr;gap:20px;align-items:center}
+#detailDiagram svg{width:100%;height:auto;max-width:230px;display:block;margin:auto}.detail-info p{font-size:.92rem;line-height:1.6;color:var(--muted)}.detail-info b{color:var(--text)}
+@media(max-width:480px){.detail-sheet{padding:18px}.detail-content{grid-template-columns:1fr;gap:8px}#detailDiagram svg{max-width:220px;display:block;margin:auto}.detail-info p{margin:8px 0}}
+
+
+.hamburger{order:-1;background:var(--panel2);color:var(--text);border:1px solid var(--line);width:43px;height:43px;border-radius:13px;font-size:1.35rem;flex-shrink:0}.app header{justify-content:flex-start}.app header .pill{margin-left:auto}.brand{margin-right:auto}
+.channel{display:none;animation:channelIn .18s ease}.channel.active{display:block}@keyframes channelIn{from{opacity:.45;transform:translateY(4px)}to{opacity:1;transform:none}}
+.drawer-shade{display:none;position:fixed;inset:0;background:#050604c9;z-index:1000}.drawer-shade.open{display:block}.side-menu{position:fixed;z-index:1001;left:0;top:0;bottom:0;width:min(360px,88vw);padding:18px 15px 16px;background:#171a15;border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .22s ease;box-shadow:12px 0 40px #0005;display:flex;flex-direction:column;overflow:hidden}.side-menu.open{transform:translateX(0)}.drawer-title{display:flex;align-items:center;gap:12px;padding:4px 5px 20px;border-bottom:1px solid var(--line);margin-bottom:10px;flex-shrink:0}.drawer-title .logo{display:grid;place-items:center;width:48px;height:48px;flex:0 0 48px;border-radius:15px;background:var(--accent);color:#17200a;font-size:25px}.drawer-brand b{font-size:1.12rem;letter-spacing:-.03em}.drawer-brand .tag{font-size:.8rem}.drawer-close{margin-left:auto;display:grid;place-items:center;width:44px;height:44px;flex:0 0 44px;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:13px;font-size:1.3rem}.drawer-scroll{overflow-y:auto;overscroll-behavior:contain;min-height:0;padding:0 1px 12px;scrollbar-width:thin}.nav-section-label{padding:13px 12px 7px;color:#89927f;font-size:.68rem;font-weight:850;letter-spacing:.17em}.nav-section-separated{border-top:1px solid var(--line);margin-top:10px;padding-top:19px}.nav-item{display:grid;grid-template-columns:28px minmax(0,1fr) 18px;align-items:center;column-gap:12px;width:100%;min-height:50px;text-align:left;padding:10px 12px;margin:3px 0;border-radius:13px;background:transparent;color:var(--muted);font-weight:740;font-size:.94rem;line-height:1.25}.nav-icon{width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:currentColor}.nav-icon svg{width:23px;height:23px;display:block;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.nav-item[data-channel="home"] .nav-icon svg,.nav-item[data-channel="plan"] .nav-icon svg{fill:currentColor;stroke:currentColor}.nav-item[data-channel="home"] .nav-icon svg path{fill:currentColor}.nav-label{min-width:0}.nav-arrow{font-size:1.55rem;font-weight:400;line-height:1;text-align:right;color:#747d6c;opacity:.85}.nav-item.active{background:#2a321f;color:var(--accent)}.nav-item.active .nav-arrow{color:var(--accent)}.drawer-note{position:static;display:flex;align-items:center;gap:10px;margin-top:auto;padding:13px 11px 3px;border-top:1px solid var(--line);color:var(--muted);font-size:.73rem;line-height:1.45;flex-shrink:0}.drawer-note-mark{width:32px;height:32px;display:grid;place-items:center;border-radius:50%;background:var(--panel2);color:var(--accent);font-size:1.1rem;flex-shrink:0}@media(max-height:620px){.drawer-title{padding-bottom:12px}.nav-item{min-height:44px;padding-top:7px;padding-bottom:7px}.nav-section-label{padding-top:8px}}
+.path-group-nav{display:flex;justify-content:flex-end;margin:10px 0 18px}.path-group-nav a{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);color:var(--text);font-weight:800;text-decoration:none}.path-group-nav a:active{transform:scale(.98)}.path-group{margin:18px 0 28px}.path-group-head{padding:15px 16px;margin:22px 0 12px;border-left:4px solid var(--accent);background:var(--panel2);border-radius:0 14px 14px 0}.path-group-head h2{margin:0 0 6px;font-size:1.2rem}.path-group-head p{margin:0;color:var(--muted);line-height:1.5}.path-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0}.path-card h3{margin:0 0 7px}.path-card p{color:var(--muted);line-height:1.55;margin:0 0 12px}.path-steps{display:grid;gap:10px}.path-step{display:grid;grid-template-columns:36px 1fr auto;gap:11px;align-items:start;padding:13px;background:var(--panel2);border-radius:14px;border:1px solid var(--line)}.path-step .step-num{display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:#303923;color:var(--accent);font-weight:900}.path-step strong{display:block}.path-step small{display:block;color:var(--muted);line-height:1.5;margin-top:4px}.path-step button{background:var(--accent);color:#17200a;border-radius:10px;padding:8px 10px;font-weight:800}.path-progress{height:8px;background:var(--panel2);border-radius:99px;overflow:hidden;margin:12px 0}.path-progress span{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}.path-tip{padding:12px;border-left:3px solid var(--accent);background:var(--panel2);border-radius:0 12px 12px 0;color:var(--muted);line-height:1.5}.home-shortcuts{margin-top:26px}.home-shortcuts h2{font-size:1.35rem;margin:0 0 5px}.shortcut-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:15px}.shortcut{position:relative;text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:9px;min-height:145px;padding:18px;border:1px solid var(--line);border-radius:19px;background:var(--panel);color:var(--text)}.shortcut>span{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:#303923;color:var(--accent);font-size:1.25rem}.shortcut b{font-size:1rem}.shortcut small{font-size:.78rem;line-height:1.4;color:var(--muted);padding-right:12px}.shortcut i{position:absolute;right:15px;top:17px;color:var(--accent);font-style:normal}.channel-heading{margin:6px 0 22px}.channel-heading h1{font-size:clamp(2rem,6vw,3rem);margin:10px 0}.channel-heading p{color:var(--muted);line-height:1.6;margin:0}.metro-bubble{display:flex;position:fixed;right:18px;bottom:100px;z-index:9999;background:var(--accent);color:#17200a;width:64px;height:64px;border-radius:50%;box-shadow:0 8px 26px #0008;border:3px solid #e3ffa3;touch-action:none;align-items:center;justify-content:center;flex-direction:column;gap:0;user-select:none;cursor:grab;opacity:0;visibility:hidden;pointer-events:none;transform:translateY(18px) scale(.62);transition:opacity .34s ease,transform .42s cubic-bezier(.2,.85,.25,1.25),visibility .34s;isolation:isolate}
+.metro-bubble.visible{opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0) scale(1)}
+.metro-bubble::before,.metro-bubble::after{content:"";position:absolute;inset:-5px;border:3px solid #c9f066;border-radius:50%;opacity:0;z-index:0;pointer-events:none;will-change:transform,opacity}.metro-bubble span,.metro-bubble small{position:relative;z-index:1}
+.metro-bubble.beat-pulse::before{animation:metroWave .72s ease-out both}
+.metro-bubble.beat-pulse::after{animation:metroWave .72s ease-out .16s both}
+.metro-bubble span{font-size:1.2rem;font-weight:900;line-height:1;transition:transform .12s ease}
+.metro-bubble small{font-size:.72rem;font-weight:900}
+.metro-bubble.beat-pulse span{animation:metroIconBeat .18s ease-out}
+.metro-bubble.dragging{cursor:grabbing;transform:scale(1.07);transition:opacity .2s,transform .12s}
+@keyframes metroWave{0%{transform:scale(.9);opacity:.8}100%{transform:scale(1.85);opacity:0}}
+@keyframes metroIconBeat{0%{transform:scale(1)}45%{transform:scale(1.28)}100%{transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.channel{animation:none}.metro-bubble{transition:opacity .25s ease,transform .25s ease}.metro-bubble.beat-pulse::before,.metro-bubble.beat-pulse::after{animation:metroWave .72s ease-out both}}
+.profile-stats{margin-top:18px}
+@media(max-width:560px){.family-picker{gap:7px}.family-chip{padding:9px 11px;font-size:.82rem}.app header{gap:9px;margin-bottom:20px}.brand{font-size:1rem;gap:7px}.brand .logo{width:37px;height:37px}.app header .pill{font-size:.68rem;padding:7px 9px}.shortcut-grid{grid-template-columns:1fr 1fr;gap:9px}.shortcut{padding:13px;min-height:150px}.shortcut b{font-size:.9rem}.shortcut small{font-size:.72rem}.metro-bubble{width:58px;height:58px}}
+
+
+.family-picker{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 16px;width:100%}.family-chip{border:1px solid var(--line);background:var(--panel);color:var(--muted);padding:10px 14px;border-radius:999px;font-size:.88rem;font-weight:750;white-space:nowrap;transition:background .15s,border-color .15s,color .15s}.family-chip.active{background:var(--accent);border-color:var(--accent);color:#17200a}.family-chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}.chord-filters{display:flex;flex-direction:column;gap:4px}
+
+
+.path-card details{margin-top:10px;border:1px solid var(--line);border-radius:13px;background:var(--panel2);overflow:hidden}.path-card details summary{list-style:none;cursor:pointer;padding:13px 15px;font-weight:800;color:var(--accent);display:flex;align-items:center;justify-content:space-between;gap:10px;touch-action:manipulation}.path-card details summary::-webkit-details-marker{display:none}.path-card details summary::after{content:'＋';font-size:1.15rem;flex-shrink:0}.path-card details[open] summary::after{content:'−'}.path-card .lesson-body{padding:0 15px 15px}.path-card .lesson-body p{margin:0 0 12px}.path-card .lesson-body p:last-of-type{margin-bottom:12px}.path-card .path-check{margin-top:12px}
+
+
+.tuner-tool{min-width:0}.tuner-note{font-size:3.2rem;font-weight:900;line-height:1.1;text-align:center;margin:22px 0 18px;color:var(--accent)}.tuner-note small{display:block;font-size:.85rem;color:var(--muted);font-weight:650;margin-top:8px}.tuner-meter{height:70px;position:relative;margin:14px 4px 8px;border-radius:14px;background:linear-gradient(90deg,#b94b56 0%,#d3a34e 35%,#7fb34a 48%,#7fb34a 52%,#d3a34e 65%,#b94b56 100%);overflow:hidden}.tuner-center{position:absolute;left:50%;top:0;bottom:0;width:3px;background:#fff;opacity:.95}.tuner-needle{position:absolute;left:50%;top:5px;height:60px;width:5px;border-radius:5px;background:#fff;box-shadow:0 0 0 2px #17200a;transform:translateX(-50%);transition:left .12s}.tuner-status{text-align:center;font-weight:800;margin:10px 0 16px}.tuner-strings{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px;margin:14px 0}.tuner-strings button{display:flex;flex-direction:column;align-items:center;gap:3px;border:1px solid var(--line);border-radius:12px;padding:10px 3px;background:var(--panel2);color:var(--text);min-width:0}.tuner-strings button.active{border-color:var(--accent);background:var(--accent);color:#17200a}.tuner-strings button b{font-size:.7rem;opacity:.75}.tuner-strings button span{font-weight:900;font-size:1.1rem}.tuner-strings button small{font-size:.58rem;opacity:.8}.tuner-strings button:disabled{opacity:.5}@media(max-width:560px){.tuner-strings{gap:4px}.tuner-strings button{padding:9px 1px}.tuner-strings button span{font-size:.95rem}.tuner-strings button small{font-size:.52rem}}
+
+
+/* Ruang belajar penuh layar */
+#lessonRoom{position:fixed;inset:0;z-index:100000;background:var(--bg);color:var(--text);overflow-y:auto;display:none;padding:0 0 calc(28px + env(safe-area-inset-bottom));}
+#lessonRoom.active{display:block}.lesson-room-top{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--bg);border-bottom:1px solid var(--line)}
+#lessonRoomBack{flex-shrink:0;border:1px solid var(--line);border-radius:12px;padding:10px 13px;background:var(--panel);color:var(--text);font-weight:800}
+.lesson-room-top span{font-size:.9rem;color:var(--muted)}.lesson-room-content{max-width:760px;margin:0 auto;padding:24px 20px 40px}
+.lesson-room-content h1{font-size:clamp(1.7rem,6vw,2.35rem);line-height:1.2;margin:5px 0 18px}.lesson-room-art{border:1px solid var(--line);border-radius:20px;background:var(--panel2);padding:14px;margin:0 0 22px;overflow:hidden}.lesson-room-art svg{display:block;width:100%;height:auto;max-height:190px}
+.lesson-audio{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:9px;margin:0 0 20px;padding:13px;border:1px solid var(--line);border-radius:18px;background:var(--panel)}.lesson-audio button{display:flex;align-items:center;justify-content:center;gap:7px;min-height:48px;padding:11px 10px;border:1px solid var(--line);border-radius:13px;font-size:.9rem;font-weight:850;line-height:1.2;white-space:nowrap}.lesson-audio #lessonSpeak{background:var(--accent);color:#17200a;border-color:transparent}.lesson-audio button.secondary{background:var(--panel2);color:var(--text)}.lesson-audio button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.5)}.lesson-audio-status{grid-column:1/-1;padding:9px 10px;border-radius:10px;background:var(--panel2);font-size:.82rem;color:var(--muted);line-height:1.45;min-height:38px;display:flex;align-items:center}@media(max-width:390px){.lesson-audio{gap:6px;padding:9px}.lesson-audio button{font-size:.78rem;padding:9px 5px;white-space:normal}}.lesson-room-body{font-size:1.06rem;line-height:1.8}.lesson-room-body p{margin:0 0 18px;color:var(--text)}.lesson-room-body b{color:var(--accent)}.lesson-room-body button{margin:6px 0 12px}
+.lesson-room-tip{border-left:4px solid var(--accent);border-radius:0 14px 14px 0;padding:14px 16px;background:var(--panel);line-height:1.65;margin:20px 0}.lesson-room-bottom{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}.lesson-room-bottom button{padding:13px 16px;border-radius:13px;font-weight:800}
+@media(min-width:700px){.lesson-room-content{padding-top:32px}}
+
+/* Profil lokal + editor foto */
+.drawer-profile{display:flex;align-items:center;gap:14px;padding:16px 17px;margin:8px 0 22px;border:1px solid #45483b;border-radius:22px;background:#11130f;cursor:pointer;text-align:left;color:#fff;width:100%;position:relative;isolation:isolate;overflow:hidden;min-height:112px;box-sizing:border-box}
+.drawer-profile:before{content:"";position:absolute;inset:0;z-index:-2;background-image:var(--profile-banner,linear-gradient(120deg,#292d23,#171a16));background-size:cover;background-position:center center;opacity:1}
+.drawer-profile:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(12,14,11,.98) 0%,rgba(12,14,11,.88) 22%,rgba(12,14,11,.58) 48%,rgba(12,14,11,.22) 74%,rgba(12,14,11,.12) 100%);pointer-events:none}
+.drawer-profile>*{position:relative;z-index:1}.drawer-profile-avatar{width:58px;height:58px;flex:0 0 58px;border-radius:50%;border:3px solid var(--accent);background:#292d23;object-fit:cover;display:grid;place-items:center;font-size:24px;box-shadow:0 2px 10px #0008}.drawer-profile-copy{min-width:0;flex:1;text-align:left}.drawer-profile-copy b{display:block;font-size:1.02rem;line-height:1.25;color:#fff;font-weight:850;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:none;-webkit-text-stroke:0}.drawer-profile-copy small{display:block;color:#f4f4ee;margin-top:6px;font-size:.84rem;text-shadow:none}.drawer-profile>span[aria-hidden="true"]{flex:0 0 18px;text-align:center;color:#fff;font-size:1.5rem;text-shadow:none;margin-left:2px}
+@media(max-width:380px){.drawer-profile{gap:10px;padding:13px;min-height:100px}.drawer-profile-avatar{width:52px;height:52px;flex-basis:52px}.drawer-profile-copy b{font-size:.94rem}}.profile-edit-grid{display:grid;grid-template-columns:1fr;gap:14px}.profile-preview-banner{width:100%;aspect-ratio:3/1;min-height:100px;max-height:180px;border-radius:16px;background:linear-gradient(120deg,#292d23,#171a16);background-size:cover;background-position:center;border:1px solid var(--line);overflow:hidden}.profile-preview-avatar{width:104px;height:104px;border-radius:50%;object-fit:cover;background:var(--panel2);border:3px solid var(--accent);display:grid;place-items:center;font-size:34px}.profile-crop-layout{display:grid;grid-template-columns:1fr;gap:12px}.profile-crop-stage{width:100%;height:220px;background:#10120f;border:1px solid var(--line);border-radius:14px;display:flex;align-items:center;justify-content:center;overflow:hidden}.profile-crop-stage img{max-width:none;max-height:none;object-fit:contain;user-select:none;touch-action:none}.profile-edit-actions{display:flex;flex-wrap:wrap;gap:9px}.profile-edit-actions button{flex:1;min-width:135px}.profile-crop-frame{border:2px dashed #c9f36a;border-radius:14px;position:absolute;pointer-events:none}.profile-editor-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+/* Editor crop sebagai modal mandiri, tidak bertumpuk di dalam form */
+#profileCropTool:not([hidden]){position:fixed;inset:0;z-index:10050;margin:0;padding:clamp(16px,4vw,28px);display:flex;flex-direction:column;justify-content:center;overflow-y:auto;background:rgba(0,0,0,.78);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);border:0;border-radius:0;box-sizing:border-box}
+#profileCropTool:not([hidden]) .crop-dialog{width:min(100%,560px);max-height:calc(100dvh - 32px);overflow-y:auto;margin:auto;padding:clamp(18px,4vw,28px);border:1px solid var(--line);border-radius:28px;background:var(--panel);box-shadow:0 24px 80px #0009;box-sizing:border-box}
+.crop-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}.crop-head h2{margin:0;font-size:clamp(1.35rem,5vw,1.8rem)}.crop-close{width:54px;height:54px;flex:0 0 54px;border-radius:18px;font-size:1.5rem}
+.profile-crop-stage{position:relative;width:100%;height:auto;aspect-ratio:3/1;min-height:0;max-height:none;background:#090a09;border:0;border-radius:18px;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none}
+.profile-crop-stage:after{content:"";position:absolute;inset:0;border:4px solid #fff;border-radius:12px;pointer-events:none;box-shadow:0 0 0 999px #0005}
+#profileCropTool[data-crop-type="avatar"] .profile-crop-stage{aspect-ratio:1/1;width:min(100%,360px);margin-inline:auto;border-radius:18px}
+#profileCropTool[data-crop-type="avatar"] .profile-crop-stage:after{inset:8%;border-radius:50%;border:4px solid #fff}
+.profile-crop-stage img{position:relative;flex:none;max-width:none;max-height:none;object-fit:fill;user-select:none;-webkit-user-drag:none;touch-action:none;pointer-events:none}
+.crop-help{text-align:center;color:var(--muted);margin:12px 0 20px;line-height:1.45}.crop-zoom-row{display:flex;align-items:center;gap:10px}.crop-zoom-row input{flex:1;min-width:0;accent-color:#1683f8}.crop-footer{display:flex;gap:12px;margin-top:24px}.crop-footer button{flex:1;min-width:0;min-height:56px;border-radius:18px;font-weight:800}
+@media(max-width:380px){#profileCropTool:not([hidden]){padding:10px}#profileCropTool:not([hidden]) .crop-dialog{padding:16px;border-radius:22px}.profile-crop-stage{aspect-ratio:2.7/1}.crop-footer{gap:8px}.crop-footer button{font-size:.9rem}}
+
+.profile-banner-edit-wrap{position:relative}.profile-banner-pencil{position:absolute;right:14px;top:14px}.profile-avatar-edit-wrap{position:relative;width:max-content;margin:18px auto 6px}.profile-avatar-pencil{position:absolute;right:-3px;top:-3px}.profile-pencil{width:38px;height:38px;border-radius:50%;border:3px solid var(--panel);background:#fff;color:#292929;display:grid;place-items:center;box-shadow:0 2px 8px #0005;cursor:pointer;padding:10px}.profile-pencil svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.profile-banner-pencil{width:auto;height:38px;padding:0 15px;border:0;border-radius:22px;background:#262626;color:#fff;display:flex;gap:9px;font-weight:800;font-size:.9rem;white-space:nowrap}.profile-banner-pencil svg{width:18px;height:18px}.profile-remove-banner{width:100%;min-height:54px;border-radius:18px;font-weight:800;margin-bottom:8px}.profile-preview-banner{cursor:default}
+</style>
+</head>
+<body>
+<div id="lessonRoom" aria-hidden="true"><div class="lesson-room-top"><button id="lessonRoomBack" type="button">← Kembali</button><span>RUANG BELAJAR SENAR</span></div><article class="lesson-room-content"><div class="eyebrow">PELAJARAN BERTAHAP</div><h1 id="lessonRoomTitle"></h1><div class="lesson-room-art" id="lessonRoomArt" aria-hidden="true"></div><section class="lesson-audio" aria-label="Audio pembelajaran"><button type="button" id="lessonSpeak">🔊 Dengarkan</button><button type="button" class="secondary" id="lessonPause" disabled>⏸ Jeda</button><button type="button" class="secondary" id="lessonStop" disabled>⏹ Berhenti</button><div class="lesson-audio-status" id="lessonAudioStatus">Tekan “Dengarkan” untuk membacakan isi materi dengan suara perangkat.</div></section><div class="lesson-room-body" id="lessonRoomBody"></div><div class="lesson-room-tip"><b>💡 Cara belajar:</b> Baca perlahan, coba contoh dengan gitar, lalu ulangi latihan. Tidak harus langsung bisa dalam sekali mencoba.</div><div class="lesson-room-bottom"><button type="button" id="lessonRoomDone">✓ Tandai tahap selesai</button><button type="button" class="secondary" id="lessonRoomBackBottom">← Kembali ke daftar</button></div></article></div>
+<div class="app">
+<header><button id="menuToggle" class="hamburger" aria-label="Buka menu" aria-expanded="false">☰</button><div class="brand"><div class="logo">♪</div><div>SENAR<div class="tag">ruang latihan gitar kamu</div></div></div><div class="pill">🔒 studio pribadi</div></header>
+<div id="drawerShade" class="drawer-shade"></div><nav id="sideMenu" class="side-menu" aria-label="Navigasi utama"><div class="drawer-title"><span class="logo">♪</span><div class="drawer-brand"><b>SENAR</b><div class="tag">Navigasi</div></div><button id="menuClose" class="drawer-close" aria-label="Tutup menu">✕</button></div><div class="drawer-scroll"><button class="drawer-profile" id="drawerProfile" data-channel="edit-profile" type="button" aria-label="Buka edit profil"><img id="drawerProfileAvatar" class="drawer-profile-avatar" alt="Foto profil" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' rx='40' fill='%23292d23'/%3E%3Ccircle cx='40' cy='29' r='14' fill='%23c9f36a'/%3E%3Cpath d='M13 72c2-17 13-25 27-25s25 8 27 25' fill='%23c9f36a'/%3E%3C/svg%3E"><span class="drawer-profile-copy"><b id="drawerProfileName">Pemain SENAR</b><small>✎ Edit profil</small></span><span aria-hidden="true">›</span></button><div class="nav-section-label">UTAMA</div><button class="nav-item active" data-channel="home"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></span><span class="nav-label">Beranda</span><span class="nav-arrow">›</span></button><button class="nav-item" data-channel="chords"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span><span class="nav-label">Latihan Chord</span><span class="nav-arrow">›</span></button><button class="nav-item" data-channel="plan"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="4" height="4" rx=".7"/><path d="M11 6h10M11 12h10M11 18h10"/><rect x="3" y="10" width="4" height="4" rx=".7"/><rect x="3" y="16" width="4" height="4" rx=".7"/></svg></span><span class="nav-label">Rencana Latihan</span><span class="nav-arrow">›</span></button><button class="nav-item" data-channel="path"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h17m-6-6 6 6-6 6"/></svg></span><span class="nav-label">Urutan Belajar</span><span class="nav-arrow">›</span></button><button class="nav-item" data-channel="info"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10h.01"/></svg></span><span class="nav-label">Info Musik & Gitar</span><span class="nav-arrow">›</span></button><button class="nav-item" data-channel="metro"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6l4 18H5z"/><path d="M8 14h8M12 7v3"/></svg></span><span class="nav-label">Metronom</span><span class="nav-arrow">›</span></button><div class="nav-section-label nav-section-separated">PEMBELAJARAN & LATIHAN</div><button class="nav-item" data-channel="tuner"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3 5 12a4 4 0 0 0 6 6l9-9a3 3 0 0 0-4-4l-9 9a1.5 1.5 0 0 0 2 2l8-8"/><path d="m13 5 6 6"/></svg></span><span class="nav-label">Tuning Gitar</span><span class="nav-arrow">›</span></button><button class="nav-item" data-channel="profile"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20v-5m5 5V9m5 11V4m5 16v-8"/></svg></span><span class="nav-label">Profil & Statistik</span><span class="nav-arrow">›</span></button></div><div class="drawer-note"><span class="drawer-note-mark">♪</span><span>Progres tersimpan di browser perangkat ini.</span></div></nav>
+<div id="channel-home" class="channel active">
+<section class="hero">
+ <div class="hero-main"><div class="eyebrow">Mulai dari satu petikan</div><h1>Pelan-pelan,<br>jadi jago.</h1><p>Latihan gitar nggak harus langsung jago. Kuasai satu chord, jaga ritme, lalu ulangi besok.</p><button class="primary" data-channel="chords">Mulai latihan ↗</button><div class="hero-art">♫</div></div>
+ <div class="daily"><div class="daily-top"><span class="eyebrow">Target hari ini</span><span>✦</span></div><div><div class="streak"><span id="doneCount">0</span><small> / 3 sesi</small></div><div class="progress"><span id="dailyProgress"></span></div><div class="tag">Selesaikan 3 sesi mini buat hari latihan yang mantap.</div></div><button class="secondary" data-channel="plan">Lihat sesi latihan</button></div>
+</section>
+<section class="stats"><div class="stat"><b id="minutesStat">—</b><span>Alat latihan</span></div><div class="stat"><b id="chordStat">0</b><span>Chord sudah dikuasai</span></div><div class="stat"><b id="lessonStat">0 / 3</b><span>Sesi selesai</span></div></section>
+<section class="home-shortcuts"><h2>Ruang latihan</h2><p class="tag">Pilih fitur yang ingin kamu pakai.</p><div class="shortcut-grid"><button class="shortcut" data-channel="chords"><span>♫</span><b>Latihan Chord</b><small>Buka katalog chord dan diagram jari</small><i>→</i></button><button class="shortcut" data-channel="plan"><span>☷</span><b>Rencana Latihan</b><small>Lihat target dan sesi latihan hari ini</small><i>→</i></button><button class="shortcut" data-channel="metro"><span>◉</span><b>Metronom</b><small>Atur tempo dan ketukan</small><i>→</i></button><button class="shortcut" data-channel="profile"><span>◎</span><b>Profil & Statistik</b><small>Lihat progres latihanmu</small><i>→</i></button></div></section>
+</div>
+<div id="channel-chords" class="channel"><section id="chord-section">
+ <div class="section-head"><div><h2>Perpustakaan chord</h2><p>Pilih jenis chord lewat tombol di bawah, lalu ketuk kartu chord untuk melihat diagram dan posisi jari.</p></div></div>
+ <div class="control-row" style="margin-bottom:12px"><input id="chordSearch" type="search" placeholder="Cari chord, misalnya Cmaj7..." aria-label="Cari chord" style="flex:1;min-width:180px;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px"><div class="family-picker" aria-label="Pilih jenis chord" id="familyButtons"></div></div>
+ <div class="tabs" id="chordTabs"><button class="tab active" data-filter="Pemula">Pemula</button><button class="tab" data-filter="Lanjutan">Lanjutan</button><button class="tab" data-filter="Semua">Semua</button></div>
+ <div id="chordCount" class="tag" style="margin:12px 2px 0"></div><div class="chords" id="chords" style="margin-top:12px"></div>
+</section></div>
+
+
+<div id="channel-info" class="channel"><div class="channel-heading"><div class="eyebrow">KAMUS MUSIK PEMULA</div><h1>Info Musik & Gitar</h1><p>Ruang referensi terpisah dari urutan belajar. Buka topik yang bikin bingung, baca contoh, lalu coba langsung di gitar. Kamu tidak harus menghafal semuanya sekaligus.</p></div>
+<div class="tool"><h3>🎼 1. Nama nada: A, B, C, D, E, F, G</h3><p>Huruf A sampai G adalah nama nada yang dipakai dalam musik. Setelah G, urutannya kembali ke A pada oktaf berikutnya: <b>A – B – C – D – E – F – G – A</b>. Ini bukan urutan chord, melainkan nama nada.</p><div class="info-note-grid"><div class="info-note"><b>A</b><span>La</span></div><div class="info-note"><b>B</b><span>Si</span></div><div class="info-note"><b>C</b><span>Do</span></div><div class="info-note"><b>D</b><span>Re</span></div><div class="info-note"><b>E</b><span>Mi</span></div><div class="info-note"><b>F</b><span>Fa</span></div><div class="info-note"><b>G</b><span>Sol</span></div></div><p><b>Do–Re–Mi</b> adalah nama solmisasi. Dalam tangga nada C mayor, Do=C, Re=D, Mi=E, Fa=F, Sol=G, La=A, Si=B. Kalau nada dasar berpindah, posisi Do juga bisa ikut berpindah.</p><p class="path-tip">Ingat gampangnya: huruf = nama nada (C, D, E...), sedangkan Do-Re-Mi = cara menyebut fungsi/urutan nada saat bernyanyi.</p></div>
+<div class="tool"><h3>🎸 2. Apa maksud “main di nada dasar C / A / B / G”?</h3><p>Biasanya orang mengatakan “lagu ini di kunci C” atau “main di nada dasar B”. Maksudnya, <b>nada dasar/key</b> adalah nada pusat lagu. Ini bukan berarti kamu hanya memainkan satu chord itu saja.</p><p>Contoh lagu di nada dasar C mayor bisa memakai chord <b>C, Dm, Em, F, G, Am</b> dan Bdim. Lagu di nada dasar G mayor biasanya memakai <b>G, Am, Bm, C, D, Em</b> dan F#dim. Di nada dasar B mayor, keluarga chord umumnya <b>B, C#m, D#m, E, F#, G#m</b> dan A#dim.</p><p><b>Contoh progresi yang sama:</b></p><div class="info-example"><b>Nada dasar C</b><span>C – G – Am – F</span></div><div class="info-example"><b>Nada dasar G</b><span>G – D – Em – C</span></div><div class="info-example"><b>Nada dasar B</b><span>B – F# – G#m – E</span></div><p>Ketiga urutan itu punya fungsi yang mirip, tetapi nadanya berbeda. Penyanyi atau instrumen bisa memilih nada dasar yang paling nyaman.</p><p class="path-tip">Chord = beberapa nada dibunyikan bersama. Nada dasar/key = pusat nada sebuah lagu. Jadi, “main chord B” dan “main lagu di key B” itu dua hal berbeda.</p><button class="secondary" data-channel="chords">Lihat diagram chord ↗</button></div>
+<div class="tool"><h3>🎹 3. Tanda # dan ♭, serta jarak nada</h3><p><b># (kres/sharp)</b> berarti naik satu langkah kecil/semiton, sedangkan <b>♭ (mol/flat)</b> berarti turun satu semiton. Contoh: F# adalah nada di antara F dan G; Bb adalah nada di antara A dan B.</p><p>Di gitar, pindah <b>satu fret = naik atau turun satu semiton</b>. Misalnya senar E terbuka, lalu fret 1 adalah F, fret 2 adalah F#, fret 3 adalah G. Nama nada berulang lagi setelah 12 fret, tetapi bunyinya satu oktaf lebih tinggi.</p><div class="info-example"><b>Senar 6 (E rendah)</b><span>E · F · F# · G · G# · A</span></div><p>Catatan: pada notasi modern yang umum di Indonesia, B biasanya berarti Si natural. Beberapa sumber Eropa memakai H untuk Si natural dan B untuk Si♭, jadi cek sistem notasi yang dipakai.</p></div>
+<div class="tool"><h3>🎵 4. Chord mayor dan minor</h3><p>Chord dibuat dari beberapa nada. Contoh paling sederhana:</p><div class="info-example"><b>C mayor</b><span>C – E – G</span></div><div class="info-example"><b>C minor (Cm)</b><span>C – E♭ – G</span></div><p>Perbedaan utamanya ada pada nada tengah/ketiga: pada chord minor, nada ketiga diturunkan satu semiton. Mayor sering terdengar cerah dan minor sering terasa sendu, tetapi itu hanya kesan umum—bukan aturan perasaan yang mutlak.</p><p>Huruf tanpa tambahan seperti C atau G biasanya menunjukkan chord mayor. Huruf dengan “m” seperti Am atau Bm menunjukkan chord minor. Jadi <b>B</b> berbeda dari <b>Bm</b>, dan <b>A</b> berbeda dari <b>Am</b>.</p></div>
+<div class="tool"><h3>🥁 5. Ritme, tempo, ketukan, dan birama</h3><p><b>Ritme</b> = pola bunyi dan jeda. <b>Tempo</b> = seberapa cepat ketukannya. <b>BPM</b> = jumlah ketukan per menit. <b>Birama</b> = cara ketukan dikelompokkan.</p><div class="info-example"><b>4/4</b><span>Hitung: 1 – 2 – 3 – 4, lalu ulangi</span></div><div class="info-example"><b>3/4</b><span>Hitung: 1 – 2 – 3, lalu ulangi</span></div><p>Kalau 60 BPM, ada 60 ketukan dalam satu menit. Pada 120 BPM, ketukannya dua kali lebih cepat. Pola genjrengan bisa tetap sama meski tempo berubah.</p><p><b>Latihan:</b> tepuk tangan sambil menghitung 1–2–3–4. Setelah stabil, ambil gitar dan genjreng satu chord pada setiap hitungan.</p></div>
+<div class="tool"><h3>🔤 6. Istilah gitar yang sering muncul</h3><div class="info-glossary"><p><b>Senar terbuka (open string):</b> senar dipetik tanpa ditekan di fret mana pun.</p><p><b>Fret:</b> ruang/posisi pada leher gitar; tiap fret menaikkan nada satu semiton.</p><p><b>Chord/progresi chord:</b> kumpulan nada yang dimainkan bersama / urutan chord dalam lagu.</p><p><b>Strumming:</b> menggenjreng beberapa senar. <b>Picking:</b> memetik senar satu per satu.</p><p><b>Capo:</b> penjepit pada fret untuk menaikkan nada gitar tanpa mengubah bentuk chord yang dimainkan.</p><p><b>Transpose:</b> memindahkan lagu ke nada dasar lain, misalnya dari C ke D.</p><p><b>Oktaf:</b> jarak saat nama nada kembali sama pada wilayah lebih tinggi/rendah, misalnya C ke C berikutnya.</p><p><b>Tangga nada:</b> kumpulan nada yang disusun berurutan, misalnya C mayor: C–D–E–F–G–A–B–C.</p><p><b>Harmoni:</b> bagaimana nada-nada atau chord berbunyi bersama dan mendukung melodi.</p></div></div>
+<div class="tool"><h3>🧭 Kalau masih bingung, ingat 4 hal ini</h3><ol><li><b>C, D, E, F, G, A, B</b> adalah nama nada.</li><li><b>C, Am, G, Bm</b> bisa menjadi nama chord; “m” berarti minor.</li><li><b>Nada dasar/key</b> menjelaskan pusat sebuah lagu dan keluarga chord yang cocok.</li><li><b>Fret</b> mengubah tinggi nada; satu fret = satu semiton.</li></ol><button class="primary" data-channel="path">Lanjutkan urutan belajar ↗</button></div>
+</div>
+<style>.info-note-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:14px 0}.info-note{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 5px;text-align:center}.info-note b{display:block;color:var(--accent);font-size:1.3rem}.info-note span{font-size:.8rem;color:var(--muted)}.info-example{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 14px;margin:8px 0;border-radius:12px;background:var(--panel2);border:1px solid var(--line);flex-wrap:wrap}.info-example span{font-weight:800;color:var(--accent);letter-spacing:.04em}.info-glossary p{padding:10px 0;border-bottom:1px solid var(--line);margin:0!important}.info-glossary p:last-child{border-bottom:0}@media(max-width:420px){.info-note-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.info-example{display:block}.info-example span{display:block;margin-top:5px}}</style>
+
+<div id="channel-path" class="channel"><div class="channel-heading"><div class="eyebrow">PETA PERJALANAN GITAR</div><h1>Urutan Belajar</h1><p>Belajar gitar dipisahkan dari teori musik agar lebih jelas: bagian teknik untuk memainkan gitar, bagian teori untuk memahami nada dan cara kerja musik. Tidak perlu menuntaskan semuanya cepat-cepat—ulangi tahap sampai nyaman.</p></div><div class="tool"><h3>Jalur belajar bertahap · 26 tahap dalam 2 bagian</h3><p>Setiap tahap berisi penjelasan dan latihan. Tandai selesai setelah kamu benar-benar mencoba latihannya. Progres tersimpan di browser perangkat ini.</p><div class="path-progress"><span id="pathProgressFill"></span></div><div class="tag" id="pathProgressText">0 dari 26 tahap selesai</div></div><div class="path-steps" id="pathSteps"><section class="path-group" id="pathPartA"><div class="path-group-head"><h2>Bagian A · Teknik bermain gitar</h2><p>Fokus ke alat musiknya: posisi tangan, senar, chord, perpindahan, genjrengan, petikan, dan memainkan lagu. Tahap 01–04 ada di sini; tahap lainnya dikelompokkan sesuai topik.</p></div><div class="path-card"><h3>01 · Fondasi gitar dan posisi tubuh</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Kenali bagian gitar: headstock, tuning peg, nut, fret, fretboard, body, bridge, dan lubang suara. Duduk tegak tetapi santai; bahu jangan terangkat. Tangan kiri menekan senar, tangan kanan memetik atau menggenjreng (untuk pemain kidal, posisi bisa dibalik). Tekan senar dengan ujung jari dan tekuk jari agar tidak menyentuh senar tetangga.</p><p><b>Latihan / target:</b> Latihan 5 menit: petik senar satu per satu, lalu istirahatkan tangan. Tidak perlu menekan terlalu keras.</p></div></details></div>
+<div class="path-card"><h3>02 · Nama senar dan tuning standar</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Dari senar paling tebal ke paling tipis, urutannya E–A–D–G–B–E (Mi–La–Re–Sol–Si–Mi). Senar tebal bernada lebih rendah; senar tipis bernada lebih tinggi. Tuning standar bisa dibantu tuner digital. Putar tuning peg sedikit-sedikit dan petik ulang untuk mengecek nada.</p><p><b>Latihan / target:</b> Target: bisa menyebut nama keenam senar dan menyetemnya tanpa menaikkan nada terlalu jauh.</p></div></details></div>
+<div class="path-card"><h3>03 · Cara membaca diagram chord</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Diagram chord menggambarkan leher gitar: garis vertikal adalah senar, garis horizontal adalah fret. Angka atau titik menunjukkan tempat jari; X berarti senar tidak dimainkan, O berarti senar dibunyikan terbuka. Nomor jari umum: 1 telunjuk, 2 tengah, 3 manis, 4 kelingking. Baca diagram dari senar paling tebal di kiri pada diagram standar.</p><p><b>Latihan / target:</b> Target: bisa membaca satu diagram dan menempatkan jari tanpa tertukar senar.</p><button class="secondary" data-channel="chords">Buka perpustakaan chord</button></div></details></div>
+<div class="path-card"><h3>04 · Nada bersih dan latihan jari</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Tekan jari dekat belakang garis fret logam, bukan tepat di atasnya. Petik satu senar setiap kali dan dengarkan: nada harus jelas, tidak mati atau berdengung. Jika bunyi mati, cek apakah jari menyentuh senar lain; jika berdengung, rapikan posisi dan tekanan.</p><p><b>Latihan / target:</b> Latihan: fret 1–2–3–4 pada setiap senar dengan tempo lambat. Berhenti jika terasa sakit, bukan sekadar pegal ringan.</p></div></details></div>
+<div class="path-card"><h3>09 · Chord pertama: Em dan Am</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Chord adalah beberapa nada yang dibunyikan bersama. Em biasanya mudah untuk pemula; Am memakai tiga jari dan membantu melatih posisi yang nantinya berguna untuk chord lain. Mayor/minor akan dipelajari lebih jauh nanti. Petik senar yang seharusnya berbunyi satu per satu sebelum menggenjreng semuanya.</p><p><b>Latihan / target:</b> Target: Em dan Am terdengar bersih masing-masing 4 kali berturut-turut.</p><button class="secondary" data-channel="chords">Buka perpustakaan chord</button></div></details></div>
+<div class="path-card"><h3>10 · Chord C, G, dan D</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Pelajari C mayor, G mayor, dan D mayor perlahan. Jangan mengangkat semua jari terlalu tinggi saat berpindah; cari gerakan paling dekat dan nyaman. Pada diagram, pastikan senar yang bertanda X tidak ikut dibunyikan.</p><p><b>Latihan / target:</b> Latihan 3 menit tiap chord, lalu coba C–G–D–G dengan satu genjrengan turun per chord.</p><button class="secondary" data-channel="chords">Buka perpustakaan chord</button></div></details></div>
+<div class="path-card"><h3>11 · Perpindahan chord tanpa berhenti</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Perpindahan adalah kemampuan mengubah bentuk chord mengikuti ketukan. Mulai Em ↔ Am, lalu C ↔ G dan G ↔ D. Beri empat ketukan untuk tiap chord; jika lancar, turunkan menjadi dua lalu satu ketukan. Jangan mempercepat tangan untuk mengejar lagu.</p><p><b>Latihan / target:</b> Target: satu putaran progresi tanpa berhenti, walau tempo masih lambat.</p></div></details></div>
+<div class="path-card"><h3>14 · Strumming dan arah genjrengan</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Strumming adalah pola menggerakkan tangan melewati senar. Simbol ↓ berarti gerak turun dan ↑ berarti gerak naik. Mulai dengan empat gerakan turun per birama. Setelah stabil, coba ↓ ↓↑ ↑↓↑; gerakan tangan tetap mengayun walau tidak semua ayunan menyentuh senar.</p><p><b>Latihan / target:</b> Gunakan satu chord dan metronom lambat. Jaga ayunan tangan tetap teratur.</p><button class="secondary" data-channel="metro">Latihan dengan metronom</button></div></details></div>
+<div class="path-card"><h3>16 · Chord keluarga lagu dan F versi mudah</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Tambahkan A, E, Dm, dan Fmaj7. Fmaj7 sering dipakai sebagai alternatif F barre yang lebih ramah pemula, tetapi bunyinya tidak persis sama. Pelajari juga progresi populer seperti G–D–Em–C dan Am–Fmaj7–C–G.</p><p><b>Latihan / target:</b> Target: bisa memainkan progresi 4 chord dengan pergantian teratur selama 1–2 menit.</p><button class="secondary" data-channel="chords">Buka perpustakaan chord</button></div></details></div>
+<div class="path-card"><h3>21 · Power chord, barre chord, dan B</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Power chord seperti E5, A5, dan D5 memakai terutama nada dasar dan nada kelima, sehingga umum dalam rock. Barre chord memakai satu jari untuk menekan beberapa senar. F dan Bm sering jadi tantangan awal; dekatkan ibu jari di belakang leher dan tekan secukupnya.</p><p><b>Latihan / target:</b> Mulai power chord dahulu. Untuk barre, latih sebentar-sebentar dan berhenti bila pergelangan atau jari terasa sakit.</p></div></details></div>
+<div class="path-card"><h3>23 · Petikan, arpeggio, dan dinamika</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Arpeggio berarti nada-nada chord dimainkan bergantian, bukan serentak. Pola petikan bisa memakai ibu jari untuk senar bass dan jari lain untuk senar treble. Dinamika adalah keras-pelan permainan; tanda crescendo berarti makin keras, diminuendo makin lembut.</p><p><b>Latihan / target:</b> Coba pola bass–3–2–1 pada chord C dengan volume rata, lalu ulangi lebih lembut.</p></div></details></div>
+<div class="path-card"><h3>25 · Mainkan satu lagu penuh dan berlatih mandiri</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Gabungkan intro, bait, reff, bridge jika ada, dan ending. Tulis urutan chord, tandai bagian yang sulit, dan latihan per bagian sebelum menggabungkan semuanya. Gunakan metronom; rekam permainan sendiri untuk mendengar ritme yang terburu-buru atau chord yang mati.</p><p><b>Latihan / target:</b> Target: satu lagu sederhana dari awal sampai akhir tanpa berhenti, meski tempo lambat.</p><button class="secondary" data-channel="metro">Latihan dengan metronom</button></div></details></div>
+<div class="path-group-nav"><a class="btn secondary" href="#pathPartB" onclick="document.getElementById('pathPartB').scrollIntoView({behavior:'smooth',block:'start'});return false;">Lanjut ke Bagian B <span aria-hidden="true">→</span></a></div></section><section class="path-group" id="pathPartB"><div class="path-group-head"><h2>Bagian B · Memahami musik</h2><p>Fokus ke bahasa musik: do-re-mi, nama nada, ritme, tempo, birama, mayor/minor, nada dasar C/B/G, tangga nada, interval, dan harmoni. Tahap 05–08 ada di sini; nomor berikutnya dikelompokkan sesuai topik.</p></div><div class="path-group-nav"><a class="btn secondary" href="#pathPartA" onclick="document.getElementById('pathPartA').scrollIntoView({behavior:'smooth',block:'start'});return false;"><span aria-hidden="true">←</span> Kembali ke Bagian A</a></div><div class="path-card"><h3>05 · Nada, tinggi-rendah, dan nama nada</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Do–Re–Mi–Fa–Sol–La–Si (solmisasi) adalah cara menyebut urutan derajat tangga nada. Jika Do ditetapkan sebagai C pada tangga nada C mayor, maka Do=C, Re=D, Mi=E, Fa=F, Sol=G, La=A, Si=B, lalu Do kembali ke C satu oktaf lebih tinggi. Solmisasi bisa berpindah: pada G mayor, Do=G; pada B mayor, Do=B. Nama huruf nada internasional yang umum dipakai adalah A–B–C–D–E–F–G, lalu berulang. Musik memakai 12 kelas nada dalam satu oktaf: C, C♯/D♭, D, D♯/E♭, E, F, F♯/G♭, G, G♯/A♭, A, A♯/B♭, B, lalu kembali ke C yang lebih tinggi. Naik satu fret berarti naik satu semiton. Dua fret berarti satu tone penuh. Nada tinggi bukan berarti lebih keras; tinggi-rendah adalah pitch, sedangkan keras-pelan adalah volume/dinamika. Dalam sistem huruf yang umum di Indonesia modern, B berarti Si natural; di beberapa notasi Eropa, H dipakai untuk Si natural dan B untuk Si bemol (Bb), jadi perhatikan sistem notasi sumber lagu.</p><p><b>Contoh praktis:</b> Pada gitar, senar 2 terbuka adalah B/Si. Senar 1 terbuka adalah E/Mi tinggi. Senar 6 terbuka adalah E/Mi rendah. Nada bernama sama seperti E dapat muncul pada oktaf berbeda.</p><p><b>Latihan / target:</b> Coba mainkan satu senar dari fret 0 sampai 12 dan dengarkan nada makin tinggi.</p></div></details></div>
+<div class="path-card"><h3>06 · Ritme, ketukan, dan birama</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Ritme adalah susunan bunyi dan jeda dalam waktu. Ritme menjawab “bunyi kapan dan berapa lama?”, sedangkan tempo menjawab “seberapa cepat denyutnya?” Pola ritme bisa sama meskipun dimainkan lambat atau cepat. Ketukan ialah denyut teratur yang bisa kamu tepuk. Birama 4/4 biasanya dihitung 1–2–3–4; 3/4 dihitung 1–2–3 seperti banyak lagu waltz. Angka atas menunjukkan jumlah ketukan per birama; angka bawah menunjukkan nilai not yang menjadi satu ketukan.</p><p><b>Latihan / target:</b> Latihan tanpa gitar: tepuk stabil sambil menghitung 1–2–3–4 selama satu menit. Setelah itu tepuk hanya angka 1 dan 3, lalu 2 dan 4. Coba juga menghitung “1 & 2 & 3 & 4 &” untuk merasakan sela di antara ketukan.</p><button class="secondary" data-channel="metro">Latihan dengan metronom</button></div></details></div>
+<div class="path-card"><h3>07 · Tempo dan BPM</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Tempo adalah cepat-lambatnya ketukan. BPM berarti beats per minute atau jumlah ketukan per menit: 60 BPM = satu ketukan tiap detik; 120 BPM = dua ketukan tiap detik. Mulai 50–70 BPM untuk latihan chord. Kecepatan bukan tujuan utama—ketukan harus stabil.</p><p><b>Latihan / target:</b> Gunakan menu Metronom. Naikkan 5 BPM hanya setelah bisa bermain rapi beberapa putaran.</p><button class="secondary" data-channel="metro">Latihan dengan metronom</button></div></details></div>
+<div class="path-card"><h3>08 · Nilai not dan jeda</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Dalam hitungan 4/4, not penuh umumnya 4 ketukan, not setengah 2, not seperempat 1, not seperdelapan setengah ketukan, dan not seperenambelas seperempat ketukan. Tanda titik menambah setengah durasi not. Jeda berarti diam selama durasi tertentu—jangan terus menggenjreng ketika ada jeda.</p><p><b>Latihan / target:</b> Hitung “1 &amp; 2 &amp; 3 &amp; 4 &amp;”; angka adalah ketukan utama dan “&amp;” adalah sela setengah ketukan.</p><button class="secondary" data-channel="metro">Latihan dengan metronom</button></div></details></div>
+<div class="path-card"><h3>12 · Progresi chord dan angka Romawi</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Progresi adalah urutan chord yang membentuk iringan lagu. Dalam nada dasar C mayor, keluarga chord diatonisnya: C, Dm, Em, F, G, Am, Bdim. Angka Romawi biasanya ditulis I–ii–iii–IV–V–vi–vii°; huruf besar menandakan mayor dan kecil menandakan minor. Contoh I–V–vi–IV di C ialah C–G–Am–F.</p><p><b>Latihan / target:</b> Coba C–G–Am–Fmaj7. Dengarkan bagaimana urutan yang sama terasa seperti perjalanan musik.</p></div></details></div>
+<div class="path-card"><h3>13 · Mayor vs minor: apa bedanya?</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Chord mayor biasanya terasa cerah atau stabil, sedangkan minor sering terasa lebih sendu—tetapi kesan ini bukan aturan mutlak. Perbedaan dasarnya ada pada interval: mayor 1–3–5, minor 1–♭3–5. Pada chord minor, nada ketiga turun satu semiton. Contoh C mayor = C–E–G; C minor = C–E♭–G.</p><p><b>Latihan / target:</b> Bandingkan C dan Cm jika sudah bisa; jika belum, bandingkan E mayor dan Em di gitar.</p></div></details></div>
+<div class="path-card"><h3>15 · Kunci/nada dasar: main di C, G, atau B</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>“Main di C” berarti C adalah nada pusat/nada dasar (key) lagu; bukan berarti semua chord-nya C. “Main di B” berarti lagu dipindahkan atau dibawakan dengan B sebagai pusatnya. Ini berbeda dari memainkan satu chord C atau B saja. Nada dasar menentukan kumpulan nada dan keluarga chord yang biasanya terasa cocok. Nada dasar membantu menentukan keluarga chord dan nada yang terasa sebagai pusat lagu. Contoh keluarga chord mayor: di C mayor = C, Dm, Em, F, G, Am, Bdim; di G mayor = G, Am, Bm, C, D, Em, F#dim; di B mayor = B, C#m, D#m, E, F#, G#m, A#dim. Progresi I–V–vi–IV yang sama dapat dimainkan C–G–Am–F di key C, G–D–Em–C di key G, atau B–F#–G#m–E di key B. C mayor tidak punya kres/mol pada tanda kunci; G mayor punya F♯; D mayor punya F♯ dan C♯; B mayor punya lima kres. Untuk gitar, B mayor sering lebih sulit bagi pemula karena bentuk barre.</p><p><b>Latihan / target:</b> Coba progresi C–G–Am–F, lalu mainkan bentuk lagu yang sama dengan capo atau transpose untuk nada dasar lain.</p></div></details></div>
+<div class="path-card"><h3>17 · Capo dan transpose</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Capo menjepit fret untuk menaikkan semua nada terbuka tanpa mengubah bentuk chord yang kamu mainkan. Transpose berarti memindahkan lagu ke nada dasar lain. Contoh: bentuk C dengan capo fret 2 terdengar dua semiton lebih tinggi, yaitu seperti D. Ini berguna menyesuaikan lagu dengan jangkauan suara penyanyi.</p><p><b>Latihan / target:</b> Coba progresi C–G–Am–F tanpa capo, lalu pasang capo fret 2 dan dengarkan perbedaannya.</p></div></details></div>
+<div class="path-card"><h3>18 · Interval dan tangga nada mayor</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Interval adalah jarak antara dua nada. Tangga nada mayor mengikuti pola tone–tone–semitone–tone–tone–tone–semitone. Contoh C mayor: C–D–E–F–G–A–B–C. Nada ke-1 disebut tonika, ke-5 dominan, dan ke-3 membantu menentukan kualitas mayor.</p><p><b>Latihan / target:</b> Nyanyikan atau petik tangga nada C perlahan, lalu coba temukan pola yang sama dari nada dasar lain.</p></div></details></div>
+<div class="path-card"><h3>19 · Tangga nada minor dan rasa musik</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Tangga nada minor alami mengikuti pola tone–semitone–tone–tone–semitone–tone–tone. Contoh A minor: A–B–C–D–E–F–G–A. A minor memakai nada yang sama dengan C mayor, tetapi pusat nadanya A. Ada juga minor harmonik dan melodik yang punya perubahan nada untuk kebutuhan melodi dan harmoni.</p><p><b>Latihan / target:</b> Bandingkan C mayor dan A minor. Nada yang sama bisa memberi rasa berbeda jika pusat musiknya berbeda.</p></div></details></div>
+<div class="path-card"><h3>20 · Chord 7 dan warna harmoni</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Chord 7 menambahkan nada ketujuh sehingga warna harmoni lebih kaya. A7 atau E7 sering terasa ingin bergerak ke chord berikutnya; maj7 cenderung lembut, sedangkan m7 punya warna minor yang halus. Contoh: Cmaj7 = C–E–G–B; Am7 = A–C–E–G.</p><p><b>Latihan / target:</b> Coba C → Cmaj7 dan Am → Am7. Dengarkan nada tambahan, bukan hanya bentuk jari.</p><button class="secondary" data-channel="chords">Buka perpustakaan chord</button></div></details></div>
+<div class="path-card"><h3>22 · Fretboard: menemukan nada di leher gitar</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Setiap fret menaikkan nada satu semiton. Fret ke-12 mengulang nama nada senar terbuka, satu oktaf lebih tinggi. Hafalkan dulu nada pada senar E rendah dan A, lalu gunakan pola untuk menemukan power chord dan nada dasar. Nama seperti B ada di fret 7 senar E rendah; C ada di fret 8.</p><p><b>Latihan / target:</b> Latihan: cari semua nada C di beberapa senar, gunakan tuner atau aplikasi untuk mengecek.</p></div></details></div>
+<div class="path-card"><h3>24 · Chord lanjutan dan inversi</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Selain mayor/minor, ada sus2, sus4, add9, diminished, augmented, slash chord, dan inversi. Sus mengganti nada ketiga; add9 menambah nada kesembilan; slash chord menunjukkan nada bass tertentu, misalnya C/G. Inversi berarti nada chord selain nada dasar berada paling bawah. Pelajari sesuai lagu, tidak perlu menghafal semuanya sekaligus.</p><p><b>Latihan / target:</b> Pilih satu lagu dan pelajari hanya variasi chord yang benar-benar muncul di lagu itu.</p><button class="secondary" data-channel="chords">Buka perpustakaan chord</button></div></details></div>
+<div class="path-card"><h3>26 · Telinga musik, improvisasi, dan teori terapan</h3><details><summary>📖 Buka pembelajaran lengkap</summary><div class="lesson-body"><p>Latih telinga dengan menebak apakah nada berikutnya lebih tinggi/rendah, mengenali mayor/minor, dan meniru melodi pendek. Improvisasi berarti membuat variasi melodi yang tetap cocok dengan chord. Gunakan tangga nada yang sesuai, mulai dari sedikit nada, lalu dengarkan hasilnya. Teori berguna untuk memahami bunyi—bukan aturan yang harus menghambat kreativitas.</p><p><b>Latihan / target:</b> Tantangan akhir: rekam progresi 4 chord, lalu buat melodi pendek di atasnya dan dengarkan apakah nadanya cocok.</p></div></details></div>
+</section></div><div class="path-tip" style="margin-top:16px"><b>Catatan penting:</b> 26 tahap ini lebih lengkap daripada 8 tahap sebelumnya, tetapi bukan berarti harus selesai dalam 25 hari. Pemula bisa menghabiskan beberapa hari atau minggu pada satu tahap. Prioritaskan nada bersih, ketukan stabil, dan latihan tanpa rasa sakit. Istilah “main di C/B/G” biasanya membahas nada dasar lagu (key), bukan hanya satu chord. Nada tinggi-rendah berbeda dari volume keras-pelan.</div></div>
+<div id="channel-metro" class="channel"><div class="channel-heading"><div class="eyebrow">RUANG LATIHAN</div><h1>Metronom</h1><p>Jaga tempo tetap stabil. Ketukan tetap berjalan saat kamu pindah channel.</p></div>
+<section class="practice-grid">
+ <div class="tool"><h3>🥁 Metronom</h3><p>Ikuti ketukan. Mulai pelan, baru naikkan tempo kalau sudah stabil.</p><div class="metronome-display"><div class="bpm"><span id="bpmValue">80</span> <small>BPM</small></div><div class="beat" id="beats"><i class="on"></i><i></i><i></i><i></i></div></div><input id="bpmRange" type="range" min="40" max="180" value="80" aria-label="Tempo BPM"><div class="control-row"><button class="primary" id="metroToggle">▶ Mulai</button><label>Ketukan</label><select id="beatsSelect"><option value="4">4/4</option><option value="3">3/4</option><option value="2">2/4</option></select></div></div>
+
+</section></div>
+<div id="channel-tuner" class="channel"><div class="channel-heading"><div class="eyebrow">RUANG LATIHAN</div><h1>Tuning Gitar</h1><p>Setem gitar standar dengan mikrofon HP. Izinkan akses mikrofon, petik satu senar saja, lalu putar tuning peg sedikit demi sedikit.</p></div>
+<section class="practice-grid"><div class="tool tuner-tool"><h3>🎸 Tuner kromatik</h3><p class="tag">Tuning standar dari senar paling tebal ke paling tipis: E2 · A2 · D3 · G3 · B3 · E4.</p><div class="tuner-note" id="tunerNote">—<small id="tunerOctave">Petik senar untuk mulai</small></div><div class="tuner-meter"><div class="tuner-center"></div><div class="tuner-needle" id="tunerNeedle"></div></div><div class="tuner-status" id="tunerStatus">Belum aktif · tekan tombol mulai</div><div class="tuner-strings" id="tunerStrings"><button type="button" data-string="0"><b>6</b><span>E2</span><small>82.4 Hz</small></button><button type="button" data-string="1"><b>5</b><span>A2</span><small>110.0 Hz</small></button><button type="button" data-string="2"><b>4</b><span>D3</span><small>146.8 Hz</small></button><button type="button" data-string="3"><b>3</b><span>G3</span><small>196.0 Hz</small></button><button type="button" data-string="4"><b>2</b><span>B3</span><small>246.9 Hz</small></button><button type="button" data-string="5"><b>1</b><span>E4</span><small>329.6 Hz</small></button></div><div class="control-row"><button class="primary" id="tunerStart">🎙 Mulai tuner</button><button class="secondary" id="tunerStop" disabled>Berhenti</button></div><p class="tag" id="tunerHelp">Tips: tempat paling tenang akan memberi hasil lebih stabil. Jika nada terlalu rendah, kencangkan perlahan; jika terlalu tinggi, kendurkan sedikit. Jangan memutar senar secara ekstrem.</p></div><div class="tool"><h3>Cara membaca tuner</h3><p><b>Terlalu rendah (♭ / flat):</b> jarum ke kiri. Kencangkan senar sedikit demi sedikit agar nadanya naik.</p><p><b>Terlalu tinggi (♯ / sharp):</b> jarum ke kanan. Kendurkan senar sedikit demi sedikit agar nadanya turun.</p><p><b>Tepat (in tune):</b> jarum dekat tengah dan indikator berubah hijau. Petik ulang setelah setiap penyesuaian.</p><p class="tag">Tuner memakai mikrofon perangkat dan pemrosesan audio di browser. Biasanya perlu HTTPS dan izin mikrofon. Suara lain di sekitar bisa mengganggu pembacaan.</p></div></section></div>
+<div id="channel-plan" class="channel"><section id="lessons">
+ <div class="section-head"><div><h2>Rencana latihan</h2><p>Tiga sesi pendek untuk hari ini.</p></div></div>
+ <div class="lesson-list">
+  <div class="lesson"><div class="num">01</div><div><strong>Pemanasan jari</strong><small>2 menit · Tekan senar satu per satu dengan santai</small></div><button class="done" data-lesson="0">Selesai</button></div>
+  <div class="lesson"><div class="num">02</div><div><strong>Ganti chord</strong><small>5 menit · Latih perpindahan G → C → D perlahan</small></div><button class="done" data-lesson="1">Selesai</button></div>
+  <div class="lesson"><div class="num">03</div><div><strong>Strumming dasar</strong><small>3 menit · Coba pola ↓ ↓↑ ↑↓↑ dengan tempo pelan</small></div><button class="done" data-lesson="2">Selesai</button></div>
+ </div>
+</section></div>
+<div id="channel-edit-profile" class="channel"><div class="channel-heading"><div class="eyebrow">IDENTITAS PEMAIN</div><h1>Edit Profil</h1><p>Atur nama, foto profil, dan banner sesuai keinginanmu. Semua perubahan disimpan hanya di browser perangkat ini.</p></div><div class="tool profile-edit-grid"><div><label for="profileNameInput"><b>Nama profil</b></label><input id="profileNameInput" maxlength="32" placeholder="Masukkan nama" style="display:block;width:100%;margin-top:8px;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:13px"></div><div><b>Banner / Latar Profil</b><div class="profile-banner-edit-wrap" style="margin:9px 0 12px"><div id="profileBannerPreview" class="profile-preview-banner" style="margin:0"></div><button id="editBannerPencil" class="profile-pencil profile-banner-pencil" type="button" aria-label="Ganti banner" title="Ganti banner"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg></button></div><button id="removeBanner" class="secondary profile-remove-banner" type="button">HAPUS BANNER</button><input id="bannerFile" type="file" accept="image/*" hidden></div><div><div class="profile-avatar-edit-wrap"><img id="profileAvatarPreview" class="profile-preview-avatar" alt="Pratinjau foto profil" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' rx='40' fill='%23292d23'/%3E%3Ccircle cx='40' cy='29' r='14' fill='%23c9f36a'/%3E%3Cpath d='M13 72c2-17 13-25 27-25s25 8 27 25' fill='%23c9f36a'/%3E%3C/svg%3E"><button id="editAvatarPencil" class="profile-pencil profile-avatar-pencil" type="button" aria-label="Ganti foto profil" title="Ganti foto profil"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg></button></div><input id="avatarFile" type="file" accept="image/*" hidden></div><div class="profile-edit-actions"><button id="saveProfile" class="primary" type="button">✓ Simpan profil</button><button id="resetProfile" class="secondary" type="button">Atur ulang profil</button></div><p id="profileSaveStatus" class="tag" role="status">Perubahan belum disimpan.</p></div><div id="profileCropTool" hidden><div class="crop-dialog"><div class="crop-head"><h2 id="cropTitle">Atur foto</h2><button id="closeCrop" class="secondary crop-close" type="button" aria-label="Tutup">×</button></div><div class="profile-crop-stage" id="cropStage"><img id="cropImage" alt="Atur posisi gambar"></div><p class="crop-help">Geser foto untuk mengatur posisi · Zoom untuk memperbesar atau memperkecil</p><div class="crop-zoom-row"><span aria-hidden="true">−</span><input id="cropZoom" aria-label="Zoom foto" type="range" min="1" max="3" step="0.01" value="1"><span aria-hidden="true">＋</span></div><div class="crop-footer"><button id="cancelCrop" class="secondary" type="button">BATAL</button><button id="applyCrop" class="primary" type="button">GUNAKAN FOTO</button></div></div></div></div>
+<div id="channel-profile" class="channel"><div class="channel-heading"><div class="eyebrow">PROGRES KAMU</div><h1>Profil & Statistik</h1><p>Ringkasan perjalanan latihan gitar di perangkat ini.</p></div><section class="stats profile-stats"><div class="stat"><b id="profileChords">0</b><span>Chord dikuasai</span></div><div class="stat"><b id="profileLessons">0 / 3</b><span>Sesi selesai</span></div><div class="stat"><b id="profileCatalog">516</b><span>Chord di katalog</span></div></section><div class="tool"><h3>Terus konsisten 🎸</h3><p>Latihan singkat yang rutin lebih berguna daripada latihan lama tapi jarang. Coba selesaikan tiga sesi hari ini.</p><button class="primary" data-channel="plan">Buka rencana latihan</button></div></div>
+<div class="note">Tips: pastikan tiap senar berbunyi bersih, tekan dekat fret, dan istirahat kalau jari terasa sakit. Studio pribadi: progres tersimpan di browser perangkat ini, bukan akun online.</div>
+</div>
+<button id="metroBubble" class="metro-bubble" aria-label="Kembali ke metronom" title="Kembali ke metronom"><span>♪</span><small id="bubbleBpm">80</small></button>
+<script>
+const ROOTS = [
+  {n:"C",pc:0},{n:"C♯",pc:1},{n:"D",pc:2},{n:"D♯",pc:3},
+  {n:"E",pc:4},{n:"F",pc:5},{n:"F♯",pc:6},{n:"G",pc:7},
+  {n:"G♯",pc:8},{n:"A",pc:9},{n:"A♯",pc:10},{n:"B",pc:11}
+];
+const CHORD_TYPES = [
+  {id:"",label:"Mayor",formula:"1–3–5",ints:[0,4,7],level:"Pemula"},
+  {id:"m",label:"Minor",formula:"1–♭3–5",ints:[0,3,7],level:"Pemula"},
+  {id:"5",label:"Power chord",formula:"1–5",ints:[0,7],level:"Pemula"},
+  {id:"dim",label:"Diminished",formula:"1–♭3–♭5",ints:[0,3,6]},
+  {id:"aug",label:"Augmented",formula:"1–3–♯5",ints:[0,4,8]},
+  {id:"sus2",label:"Suspended 2",formula:"1–2–5",ints:[0,2,7]},
+  {id:"sus4",label:"Suspended 4",formula:"1–4–5",ints:[0,5,7]},
+  {id:"6",label:"Mayor 6",formula:"1–3–5–6",ints:[0,4,7,9]},
+  {id:"m6",label:"Minor 6",formula:"1–♭3–5–6",ints:[0,3,7,9]},
+  {id:"7",label:"Dominan 7",formula:"1–3–5–♭7",ints:[0,4,7,10]},
+  {id:"maj7",label:"Mayor 7",formula:"1–3–5–7",ints:[0,4,7,11]},
+  {id:"m7",label:"Minor 7",formula:"1–♭3–5–♭7",ints:[0,3,7,10]},
+  {id:"mMaj7",label:"Minor / Major 7",formula:"1–♭3–5–7",ints:[0,3,7,11]},
+  {id:"dim7",label:"Diminished 7",formula:"1–♭3–♭5–𝄫7",ints:[0,3,6,9]},
+  {id:"m7♭5",label:"Half-diminished",formula:"1–♭3–♭5–♭7",ints:[0,3,6,10]},
+  {id:"7sus4",label:"Dominan 7 sus4",formula:"1–4–5–♭7",ints:[0,5,7,10]},
+  {id:"7sus2",label:"Dominan 7 sus2",formula:"1–2–5–♭7",ints:[0,2,7,10]},
+  {id:"add9",label:"Add 9",formula:"1–3–5–9",ints:[0,2,4,7]},
+  {id:"madd9",label:"Minor add 9",formula:"1–♭3–5–9",ints:[0,2,3,7]},
+  {id:"maj9",label:"Mayor 9",formula:"1–3–5–7–9",ints:[0,2,4,7,11]},
+  {id:"9",label:"Dominan 9",formula:"1–3–5–♭7–9",ints:[0,2,4,7,10]},
+  {id:"m9",label:"Minor 9",formula:"1–♭3–5–♭7–9",ints:[0,2,3,7,10]},
+  {id:"maj7♯11",label:"Mayor 7 ♯11",formula:"1–3–5–7–♯11",ints:[0,4,6,7,11]},
+  {id:"11",label:"Dominan 11",formula:"1–3–5–♭7–9–11",ints:[0,2,4,5,7,10]},
+  {id:"m11",label:"Minor 11",formula:"1–♭3–5–♭7–9–11",ints:[0,2,3,5,7,10]},
+  {id:"13",label:"Dominan 13",formula:"1–3–5–♭7–9–13",ints:[0,2,4,7,9,10]},
+  {id:"maj13",label:"Mayor 13",formula:"1–3–5–7–9–13",ints:[0,2,4,7,9,11]},
+  {id:"m13",label:"Minor 13",formula:"1–♭3–5–♭7–9–13",ints:[0,2,3,7,9,10]},
+  {id:"6/9",label:"Six-nine",formula:"1–3–5–6–9",ints:[0,2,4,7,9]},
+  {id:"7♭5",label:"Dominan 7 ♭5",formula:"1–3–♭5–♭7",ints:[0,4,6,10]},
+  {id:"7♯5",label:"Dominan 7 ♯5",formula:"1–3–♯5–♭7",ints:[0,4,8,10]},
+  {id:"7♭9",label:"Dominan 7 ♭9",formula:"1–3–5–♭7–♭9",ints:[0,1,4,7,10]},
+  {id:"7♯9",label:"Dominan 7 ♯9",formula:"1–3–5–♭7–♯9",ints:[0,3,4,7,10]},
+  {id:"7♯11",label:"Dominan 7 ♯11",formula:"1–3–5–♭7–♯11",ints:[0,4,6,7,10]},
+  {id:"7♭13",label:"Dominan 7 ♭13",formula:"1–3–5–♭7–♭13",ints:[0,4,7,8,10]},
+  {id:"7alt",label:"Altered dominant",formula:"1–3–♭7 + altered tensions",ints:[0,4,10,1,3,8]},
+  {id:"maj6/9",label:"Mayor 6/9",formula:"1–3–5–6–9",ints:[0,2,4,7,9]},
+  {id:"m(add11)",label:"Minor add 11",formula:"1–♭3–5–11",ints:[0,3,5,7]},
+  {id:"add4",label:"Add 4",formula:"1–3–4–5",ints:[0,4,5,7]},
+  {id:"madd4",label:"Minor add 4",formula:"1–♭3–4–5",ints:[0,3,5,7]},
+  {id:"7add13",label:"7 add 13",formula:"1–3–5–♭7–13",ints:[0,4,7,9,10]},
+  {id:"maj9(no5)",label:"Mayor 9 tanpa 5",formula:"1–3–7–9",ints:[0,2,4,11]},
+  {id:"9(no5)",label:"Dominan 9 tanpa 5",formula:"1–3–♭7–9",ints:[0,2,4,10]},
+  {id:"m9(no5)",label:"Minor 9 tanpa 5",formula:"1–♭3–♭7–9",ints:[0,2,3,10]}
+];
+const TUNING=[4,9,2,7,11,4]; // senar E A D G B e, dari rendah ke tinggi
+const PC_NAMES=["C","C♯/D♭","D","D♯/E♭","E","F","F♯/G♭","G","G♯/A♭","A","A♯/B♭","B"];
+const chordData=[];
+ROOTS.forEach(root=>CHORD_TYPES.forEach(t=>{
+  chordData.push({name:root.n+t.id,root:root.n,rootPc:root.pc,type:t.id,desc:t.label,
+    formula:t.formula,ints:t.ints,level:t.level||"Lanjutan"});
+}));
+const mastered=new Set(JSON.parse(localStorage.getItem('senarMastered')||'[]'));
+const completed=new Set(JSON.parse(localStorage.getItem('senarLessons')||'[]'));
+let filter='Pemula';
+let selectedFamily='Semua';
+let selectedChord=null;
+
+function chordSvg(c, compact=false){
+  const shape=c.shape||[-1,-1,-1,-1,-1,-1];
+  const fretted=shape.filter(v=>v>0), minF=fretted.length?Math.min(...fretted):1;
+  const start=minF>4?minF:1;
+  const x0=28, xStep=28, y0=48, yStep=28, strings=6, frets=5;
+  let s=`<svg viewBox="0 0 200 225" role="img" aria-label="Simulasi fretboard chord ${c.name}">
+    <rect x="${x0-7}" y="${y0-7}" width="${xStep*5+14}" height="${yStep*5+14}" rx="5" fill="#141711" stroke="#30372a"/>
+    <text x="8" y="15" fill="#c9f06a" font-size="9" font-weight="700">SENAR</text>`;
+  const labels=['E','A','D','G','B','e'];
+  for(let i=0;i<strings;i++)s+=`<text x="${x0+i*xStep}" y="30" text-anchor="middle" fill="#c6cbbd" font-size="12" font-weight="700">${labels[i]}</text>`;
+  if(start>1)s+=`<text x="185" y="44" text-anchor="end" fill="#c9f06a" font-size="10">${start}fr</text>`;
+  for(let i=0;i<strings;i++){let x=x0+i*xStep;s+=`<line x1="${x}" y1="${y0}" x2="${x}" y2="${y0+yStep*frets}" stroke="#a0a694" stroke-width="${i===0||i===5?1.7:1.2}"/>`;}
+  for(let f=0;f<=frets;f++){let y=y0+f*yStep;s+=`<line x1="${x0}" y1="${y}" x2="${x0+xStep*5}" y2="${y}" stroke="${f===0&&start===1?'#c9f06a':'#69705f'}" stroke-width="${f===0&&start===1?4:1.5}"/>`;if(f<frets)s+=`<text x="${x0-15}" y="${y+yStep/2+4}" text-anchor="middle" fill="#7e8674" font-size="9">${start+f}</text>`;}
+  for(let i=0;i<strings;i++){
+    const x=x0+i*xStep,v=shape[i];
+    if(v===-1)s+=`<text x="${x}" y="214" text-anchor="middle" fill="#ff927e" font-size="18" font-weight="700">×</text>`;
+    else if(v===0)s+=`<circle cx="${x}" cy="40" r="6" fill="none" stroke="#c9f06a" stroke-width="2.5"/>`;
+    else {const row=v-start;if(row>=0&&row<frets){const pc=(TUNING[i]+v)%12;const isRoot=pc===c.rootPc;s+=`<circle cx="${x}" cy="${y0+(row+.5)*yStep}" r="10" fill="${isRoot?'#c9f06a':'#8da83f'}" stroke="#eaffb4" stroke-width="1"/><text x="${x}" y="${y0+(row+.5)*yStep+3.5}" text-anchor="middle" fill="#17200a" font-size="8" font-weight="900">${isRoot?'R':''}</text>`;}}
+  }
+  s+=`<text x="100" y="224" text-anchor="middle" fill="#aab19e" font-size="9">R = nada dasar chord</text></svg>`;
+  return s;
+}
+// Cari voicing standar yang bisa dimainkan: 6 senar, rentang maksimal 4 fret,
+// nada dasar wajib muncul, dan sebisa mungkin semua nada chord terwakili.
+function findVoicing(c){
+  const pcs=[...new Set(c.ints.map(i=>(c.rootPc+i)%12))];
+  let best=null,bestScore=Infinity;
+  // Coba posisi terbuka dan posisi barre dari fret 1 sampai 8.
+  for(let base of [1,2,3,4,5,6,7,8]){
+    const opts=TUNING.map((open,idx)=>{
+      const arr=[-1];
+      if(base===1 && pcs.includes(open))arr.push(0);
+      const lo=base===1?1:base, hi=Math.min(12,lo+4);
+      for(let f=lo;f<=hi;f++)if(pcs.includes((open+f)%12))arr.push(f);
+      return arr;
+    });
+    function walk(i,arr){
+      if(i===6){
+        const played=arr.filter(v=>v>=0), tones=new Set();
+        arr.forEach((v,j)=>{if(v>=0)tones.add((TUNING[j]+v)%12)});
+        if(played.length<3||!tones.has(c.rootPc))return;
+        const coverage=pcs.filter(pc=>tones.has(pc)).length;
+        if(coverage<Math.min(3,pcs.length))return;
+        const fs=arr.filter(v=>v>0), span=fs.length?Math.max(...fs)-Math.min(...fs):0;
+        if(span>4)return;
+        const score=(6-played.length)*1.7+span*1.1+arr.reduce((sum,v)=>sum+(v>0?v*.06:0),0)+(pcs.length-coverage)*4+(base>1?1.5:0);
+        if(score<bestScore){bestScore=score;best=arr.slice()}
+        return;
+      }
+      for(const v of opts[i]){
+        const next=arr.concat(v), fs=next.filter(x=>x>0);
+        if(fs.length&&Math.max(...fs)-Math.min(...fs)>4)continue;
+        walk(i+1,next);
+      }
+    }
+    walk(0,[]);
+  }
+  return best||[-1,-1,-1,-1,-1,-1];
+}
+function openChord(name){
+  const c=chordData.find(x=>x.name===name);if(!c)return;
+  c.shape=findVoicing(c);selectedChord=c;
+  let detail=document.getElementById('chordDetail');
+  if(!detail){
+    detail=document.createElement('div');detail.id='chordDetail';detail.className='chord-detail';
+    detail.innerHTML=`<div class="detail-backdrop" data-close></div><div class="detail-sheet" role="dialog" aria-modal="true" aria-labelledby="detailName">
+      <button class="detail-close" data-close aria-label="Tutup">✕</button><div class="eyebrow">DIAGRAM CHORD</div><h2 id="detailName"></h2>
+      <div class="detail-content"><div id="detailDiagram"></div><div class="detail-info"><p id="detailType"></p><p><b>Rumus:</b> <span id="detailFormula"></span></p><p><b>Nada chord:</b> <span id="detailNotes"></span></p><p class="tag">Senar dibaca dari kiri (E rendah) ke kanan (e tinggi). × = jangan dibunyikan, ○ = senar terbuka, titik = tekan fret.</p>
+      <button id="masterToggle" class="primary"></button></div></div></div>`;
+    document.body.appendChild(detail);
+    detail.querySelectorAll('[data-close]').forEach(x=>x.onclick=()=>detail.classList.remove('open'));
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')detail.classList.remove('open')});
+  }
+  document.getElementById('detailName').textContent=c.name;
+  document.getElementById('detailDiagram').innerHTML=chordSvg(c);
+  document.getElementById('detailType').textContent=c.desc;
+  document.getElementById('detailFormula').textContent=c.formula;
+  document.getElementById('detailNotes').textContent=[...new Set(c.ints.map(i=>PC_NAMES[(c.rootPc+i)%12]))].join(' · ');
+  const mb=document.getElementById('masterToggle');
+  mb.textContent=mastered.has(c.name)?'✓ Sudah dikuasai — batalkan':'Tandai sudah dikuasai';
+  mb.onclick=()=>{mastered.has(c.name)?mastered.delete(c.name):mastered.add(c.name);localStorage.setItem('senarMastered',JSON.stringify([...mastered]));mb.textContent=mastered.has(c.name)?'✓ Sudah dikuasai — batalkan':'Tandai sudah dikuasai';renderChords();updateStats()};
+  detail.classList.add('open');
+}
+function renderChords(){
+  const q=(document.getElementById('chordSearch')?.value||'').trim().toLowerCase();
+  const fam=selectedFamily;
+  const list=chordData.filter(c=>(fam!=='Semua'||filter==='Semua'||c.level===filter)&&(fam==='Semua'||c.desc===fam)&&(!q||(c.name+' '+c.desc+' '+c.formula).toLowerCase().includes(q)));
+  document.getElementById('chordCount').textContent=`${list.length} chord ditampilkan · ${chordData.length} nama chord dalam katalog`;
+  document.getElementById('chords').innerHTML=list.map(c=>{c.shape=findVoicing(c);return `<button class="chord chord-open" data-open-chord="${c.name}" aria-label="Buka detail chord ${c.name}"><strong>${c.name}</strong>${chordSvg(c,true)}<small>${c.desc}${mastered.has(c.name)?' · ✓ dikuasai':''}</small><span class="open-hint">Detail chord ↗</span></button>`}).join('')||'<p class="tag">Chord tidak ditemukan. Coba kata kunci lain.</p>';
+  document.querySelectorAll('[data-open-chord]').forEach(b=>b.onclick=()=>openChord(b.dataset.openChord));
+}
+document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));renderChords()});
+document.getElementById('chordSearch').addEventListener('input',renderChords);
+function renderFamilyButtons(){
+  const host=document.getElementById('familyButtons');
+  const families=['Semua jenis',...new Set(CHORD_TYPES.map(t=>t.label))];
+  host.innerHTML=families.map(label=>{const value=label==='Semua jenis'?'Semua':label;return `<button type="button" class="family-chip ${selectedFamily===value?'active':''}" data-family="${value}" aria-pressed="${selectedFamily===value}">${label==='Semua jenis'?'Semua':label}</button>`}).join('');
+  host.querySelectorAll('[data-family]').forEach(b=>b.onclick=()=>{selectedFamily=b.dataset.family;renderFamilyButtons();renderChords()});
+}
+
+function updateStats(){
+  let n=completed.size;document.getElementById('doneCount').textContent=n;document.getElementById('dailyProgress').style.width=(n/3*100)+'%';
+  document.getElementById('lessonStat').textContent=n+' / 3';document.getElementById('chordStat').textContent=mastered.size+' / '+chordData.filter(c=>c.level==='Pemula').length;
+  document.querySelectorAll('[data-lesson]').forEach(b=>{let yes=completed.has(+b.dataset.lesson);b.textContent=yes?'✓ Selesai':'Selesai';b.style.background=yes?'#333d22':'var(--accent)';b.style.color=yes?'var(--accent)':'#17200a'});
+}
+document.querySelectorAll('[data-lesson]').forEach(b=>b.onclick=()=>{let n=+b.dataset.lesson;completed.has(n)?completed.delete(n):completed.add(n);localStorage.setItem('senarLessons',JSON.stringify([...completed]));updateStats()});
+renderFamilyButtons();renderChords();updateStats();
+let audioCtx=null,metroTimer=null,beatIndex=0;
+const bpmRange=document.getElementById('bpmRange'),bpmValue=document.getElementById('bpmValue'),beats=document.getElementById('beats'),metroToggle=document.getElementById('metroToggle');
+function clickSound(accent){try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();let osc=audioCtx.createOscillator(),gain=audioCtx.createGain();osc.frequency.value=accent?1050:720;gain.gain.setValueAtTime(.0001,audioCtx.currentTime);gain.gain.exponentialRampToValueAtTime(accent?.25:.13,audioCtx.currentTime+.008);gain.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.08);osc.connect(gain);gain.connect(audioCtx.destination);osc.start();osc.stop(audioCtx.currentTime+.09)}catch(e){}}
+function metroTick(){let total=+document.getElementById('beatsSelect').value;clickSound(beatIndex%total===0);[...beats.children].forEach((el,i)=>el.classList.toggle('on',i===beatIndex%total));const mb=document.getElementById('metroBubble');if(mb){mb.classList.remove('beat-pulse');void mb.offsetWidth;mb.classList.add('beat-pulse');clearTimeout(mb._waveTimer);mb._waveTimer=setTimeout(()=>mb.classList.remove('beat-pulse'),760)}beatIndex++}
+function stopMetro(){clearInterval(metroTimer);metroTimer=null;metroToggle.textContent='▶ Mulai'}
+function startMetro(){if(metroTimer){stopMetro();return}metroTick();metroTimer=setInterval(metroTick,60000/+bpmRange.value);metroToggle.textContent='Ⅱ Berhenti'}
+metroToggle.onclick=()=>startMetro();
+bpmRange.oninput=()=>{bpmValue.textContent=bpmRange.value;if(metroTimer){stopMetro();startMetro()}};
+document.getElementById('beatsSelect').onchange=()=>{beatIndex=0;if(metroTimer){stopMetro();startMetro()}};
+document.getElementById('minutesStat').textContent='Metronom';
+
+// Tuner gitar berbasis mikrofon dan deteksi pitch (autocorrelation).
+const tunerStrings=[{name:'E',oct:2,hz:82.4069},{name:'A',oct:2,hz:110},{name:'D',oct:3,hz:146.832},{name:'G',oct:3,hz:195.998},{name:'B',oct:3,hz:246.942},{name:'E',oct:4,hz:329.628}];
+let tunerStream=null,tunerCtx=null,tunerFrame=null,tunerTarget=0;
+const tunerStart=document.getElementById('tunerStart'),tunerStop=document.getElementById('tunerStop');
+function chooseTunerString(i){tunerTarget=i;document.querySelectorAll('#tunerStrings button').forEach((b,j)=>b.classList.toggle('active',j===i));const t=tunerStrings[i];document.getElementById('tunerHelp').textContent=`Target senar ${6-i}: ${t.name}${t.oct} (${t.hz.toFixed(1)} Hz). Petik senar ini saja, lalu sesuaikan tuning peg sedikit demi sedikit.`}
+document.querySelectorAll('#tunerStrings button').forEach(b=>b.addEventListener('click',()=>chooseTunerString(+b.dataset.string)));
+function tunerPitch(buf,sr){
+  // Autokorelasi dipercepat: analisis sebagian sampel dan hanya rentang frekuensi gitar.
+  const n=buf.length;let mean=0;for(let i=0;i<n;i++)mean+=buf[i];mean/=n;
+  let rms=0;for(let i=0;i<n;i++){const v=buf[i]-mean;rms+=v*v;}rms=Math.sqrt(rms/n);if(rms<0.006)return null;
+  const minLag=Math.max(2,Math.floor(sr/380)),maxLag=Math.min(Math.floor(n/2),Math.floor(sr/65));
+  const scores=new Float32Array(maxLag+2);let bestLag=-1,bestScore=-1;
+  // Step 2 mengurangi beban CPU HP; tetap cukup akurat untuk tuning gitar.
+  for(let lag=minLag;lag<=maxLag;lag++){
+    let cross=0,e1=0,e2=0;
+    for(let i=0;i<n-lag;i+=2){const a=buf[i]-mean,b=buf[i+lag]-mean;cross+=a*b;e1+=a*a;e2+=b*b;}
+    scores[lag]=cross/Math.sqrt((e1*e2)||1);
+  }
+  // Pilih puncak kuat pertama untuk mengurangi kesalahan satu oktaf.
+  for(let lag=minLag+1;lag<maxLag;lag++){
+    const score=scores[lag];
+    if(score>0.60&&score>=scores[lag-1]&&score>=scores[lag+1]){bestLag=lag;bestScore=score;break;}
+    if(score>bestScore){bestScore=score;bestLag=lag;}
+  }
+  if(bestLag<0||bestScore<0.45)return null;
+  const l=scores[bestLag-1]||0,c=scores[bestLag]||0,r=scores[bestLag+1]||0,den=l-2*c+r;
+  const refined=bestLag+(Math.abs(den)>1e-9?0.5*(l-r)/den:0),hz=sr/refined;
+  return hz>=65&&hz<=400?hz:null;
+}
+let tunerLastPaint=0;
+function tunerLoop(now=0){
+  if(!tunerCtx||!tunerStream)return;
+  // Jangan jalankan deteksi berat di setiap frame; penting untuk browser HP.
+  if(now-tunerLastPaint>90){
+    tunerLastPaint=now;tunerLoop.analyser.getFloatTimeDomainData(tunerLoop.buffer);
+    const hz=tunerPitch(tunerLoop.buffer,tunerCtx.sampleRate);
+    if(hz){
+      const midi=69+12*Math.log2(hz/440),near=Math.round(midi),names=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
+      const note=names[(near%12+12)%12],oct=Math.floor(near/12)-1,target=tunerStrings[tunerTarget],targetCents=1200*Math.log2(hz/target.hz);
+      document.getElementById('tunerNote').innerHTML=`${note}<small id="tunerOctave">${oct} · ${hz.toFixed(1)} Hz</small>`;
+      const pos=Math.max(4,Math.min(96,50+targetCents/50*45));document.getElementById('tunerNeedle').style.left=pos+'%';
+      const status=document.getElementById('tunerStatus');
+      if(Math.abs(targetCents)<=5){status.textContent='✓ Tepat! Senar sudah mendekati nada target';status.style.color='var(--accent)';}
+      else if(targetCents<0){status.textContent=`Terlalu rendah · ${Math.round(Math.abs(targetCents))} cent — kencangkan perlahan`;status.style.color='var(--text)';}
+      else{status.textContent=`Terlalu tinggi · ${Math.round(targetCents)} cent — kendurkan perlahan`;status.style.color='var(--text)';}
+    }else{
+      document.getElementById('tunerStatus').textContent='Mikrofon aktif — belum menangkap nada. Dekatkan gitar dan petik satu senar.';
+    }
+  }
+  tunerFrame=requestAnimationFrame(tunerLoop);
+}
+async function startTuner(){
+  tunerStart.disabled=true;document.getElementById('tunerStatus').textContent='Memeriksa akses mikrofon…';
+  try{
+    if(!window.isSecureContext||!navigator.mediaDevices?.getUserMedia)throw new Error('Halaman ini tidak bisa memakai mikrofon. Buka versi GitHub Pages dengan alamat HTTPS (bukan file dari folder Downloads), lalu izinkan mikrofon di pengaturan situs.');
+    document.getElementById('tunerStatus').textContent='Meminta izin mikrofon — pilih Izinkan jika muncul…';
+    const permissionRequest=navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+    let timeoutId;const timeout=new Promise((_,reject)=>{timeoutId=setTimeout(()=>reject(new Error('Permintaan mikrofon belum dijawab. Periksa ikon izin mikrofon di bilah alamat atau setelan situs browser, lalu muat ulang halaman.')),12000)});
+    tunerStream=await Promise.race([permissionRequest,timeout]);clearTimeout(timeoutId);
+    tunerCtx=new(window.AudioContext||window.webkitAudioContext)();if(tunerCtx.state==='suspended')await tunerCtx.resume();
+    const source=tunerCtx.createMediaStreamSource(tunerStream),analyser=tunerCtx.createAnalyser();analyser.fftSize=4096;analyser.smoothingTimeConstant=0;source.connect(analyser);
+    tunerLoop.analyser=analyser;tunerLoop.buffer=new Float32Array(analyser.fftSize);tunerStop.disabled=false;
+    document.getElementById('tunerStatus').textContent='Mikrofon aktif — petik satu senar saja';tunerLastPaint=0;tunerLoop();
+  }catch(e){if(tunerStream)tunerStream.getTracks().forEach(t=>t.stop());tunerStream=null;if(tunerCtx){tunerCtx.close().catch(()=>{});tunerCtx=null;}tunerStart.disabled=false;tunerStop.disabled=true;document.getElementById('tunerStatus').textContent=e.name==='NotAllowedError'?'Izin mikrofon ditolak. Buka setelan situs browser dan ubah Mikrofon menjadi Izinkan, lalu muat ulang.':(e.message||'Tuner tidak dapat dimulai.');}
+}
+function stopTuner(){if(tunerFrame)cancelAnimationFrame(tunerFrame);tunerFrame=null;if(tunerStream)tunerStream.getTracks().forEach(t=>t.stop());tunerStream=null;if(tunerCtx){tunerCtx.close().catch(()=>{});tunerCtx=null}tunerLoop.analyser=null;tunerStart.disabled=false;tunerStop.disabled=true;document.getElementById('tunerStatus').textContent='Tuner berhenti';document.getElementById('tunerNote').innerHTML='—<small id="tunerOctave">Petik senar untuk mulai</small>';document.getElementById('tunerNeedle').style.left='50%'}
+tunerStart.addEventListener('click',startTuner);tunerStop.addEventListener('click',stopTuner);document.querySelectorAll('[data-channel]').forEach(el=>{if(el.dataset.channel==='tuner')el.addEventListener('click',()=>{if(tunerStream)stopTuner()})});
+
+// Navigasi channel
+const drawer=document.getElementById('sideMenu'),shade=document.getElementById('drawerShade'),menuToggle=document.getElementById('menuToggle');
+function closeMenu(){drawer.classList.remove('open');shade.classList.remove('open');menuToggle.setAttribute('aria-expanded','false')}
+function openMenu(){drawer.classList.add('open');shade.classList.add('open');menuToggle.setAttribute('aria-expanded','true')}
+menuToggle.onclick=()=>drawer.classList.contains('open')?closeMenu():openMenu();
+document.getElementById('menuClose').onclick=closeMenu;shade.onclick=closeMenu;
+
+function goChannel(which){document.querySelectorAll('.channel').forEach(el=>el.classList.toggle('active',el.id==='channel-'+which));document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.channel===which));closeMenu();window.scrollTo({top:0,behavior:'smooth'});if(which==='metro')document.getElementById('bpmRange').focus({preventScroll:true});updateBubble()}
+document.querySelectorAll('[data-channel]').forEach(el=>el.addEventListener('click',()=>goChannel(el.dataset.channel)));
+// Bubble metronom tetap ada di atas channel lain selama metronom sedang berjalan.
+const bubble=document.getElementById('metroBubble');
+function updateBubble(){const on=!!metroTimer && !document.getElementById('channel-metro').classList.contains('active');bubble.classList.toggle('visible',on);document.getElementById('bubbleBpm').textContent=bpmRange.value;if(on && !bubble.style.left && !bubble.style.top){bubble.style.right='18px';bubble.style.bottom='100px';}}
+const oldStartMetro=startMetro;
+startMetro=function(){oldStartMetro();updateBubble()};
+const oldStopMetro=stopMetro;
+stopMetro=function(){oldStopMetro();updateBubble()};
+bpmRange.addEventListener('input',()=>{document.getElementById('bubbleBpm').textContent=bpmRange.value;updateBubble()});
+bubble.addEventListener('click',()=>{if(bubble.dataset.moved==='yes'){bubble.dataset.moved='no';return}goChannel('metro')});
+let drag=null;
+bubble.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,left:bubble.offsetLeft,top:bubble.offsetTop,moved:false};bubble.setPointerCapture(e.pointerId);bubble.classList.add('dragging')});
+bubble.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>6)drag.moved=true;const left=Math.max(4,Math.min(innerWidth-bubble.offsetWidth-4,drag.left+dx));const top=Math.max(4,Math.min(innerHeight-bubble.offsetHeight-4,drag.top+dy));bubble.style.left=left+'px';bubble.style.top=top+'px';bubble.style.right='auto';bubble.style.bottom='auto'});
+function finishDrag(){if(!drag)return;bubble.dataset.moved=drag.moved?'yes':'no';bubble.classList.remove('dragging');drag=null}
+bubble.addEventListener('pointerup',finishDrag);bubble.addEventListener('pointercancel',finishDrag);
+// Sinkronkan jumlah katalog dan statistik profil.
+// Ruang belajar terpisah agar penjelasan lega dan nyaman dibaca di HP.
+const lessonRoom=document.getElementById('lessonRoom');
+const lessonRoomTitle=document.getElementById('lessonRoomTitle');
+const lessonRoomBody=document.getElementById('lessonRoomBody');
+const lessonRoomArt=document.getElementById('lessonRoomArt');
+let activeLessonCard=null;
+let lessonUtterance=null;
+let lessonAudioChunks=[];
+let lessonChunkIndex=0;
+let lessonAudioPaused=false;
+let lessonAudioRunId=0;
+const lessonSpeakBtn=document.getElementById('lessonSpeak');
+const lessonPauseBtn=document.getElementById('lessonPause');
+const lessonStopBtn=document.getElementById('lessonStop');
+const lessonAudioStatus=document.getElementById('lessonAudioStatus');
+function lessonAudioButtons(active=false,paused=false){
+ lessonSpeakBtn.disabled=active;
+ lessonPauseBtn.disabled=!active;
+ lessonStopBtn.disabled=!active;
+ lessonPauseBtn.textContent=paused?'▶ Lanjutkan':'⏸ Jeda';
+}
+function stopLessonAudio(message='Audio dihentikan.'){
+ lessonAudioRunId++;
+ if('speechSynthesis' in window)window.speechSynthesis.cancel();
+ lessonUtterance=null;lessonAudioChunks=[];lessonChunkIndex=0;lessonAudioPaused=false;
+ lessonAudioButtons(false);lessonAudioStatus.textContent=message;
+}
+function speakLessonChunk(runId){
+ if(runId!==lessonAudioRunId||lessonAudioPaused)return;
+ if(lessonChunkIndex>=lessonAudioChunks.length){lessonUtterance=null;lessonAudioButtons(false);lessonAudioStatus.textContent='Selesai membacakan materi.';return;}
+ const part=lessonAudioChunks[lessonChunkIndex];
+ const u=new SpeechSynthesisUtterance(part);lessonUtterance=u;u.lang='id-ID';u.rate=0.88;u.pitch=1;
+ u.onstart=()=>{if(runId===lessonAudioRunId){lessonAudioButtons(true,false);lessonAudioStatus.textContent='Sedang membacakan materi… Bagian '+(lessonChunkIndex+1)+' dari '+lessonAudioChunks.length+'.';}};
+ u.onend=()=>{if(runId!==lessonAudioRunId)return;lessonChunkIndex++;if(!lessonAudioPaused)speakLessonChunk(runId);};
+ u.onerror=(e)=>{if(runId!==lessonAudioRunId)return;if(e.error==='canceled'&&lessonAudioPaused)return;lessonUtterance=null;lessonAudioButtons(false);lessonAudioStatus.textContent='Suara terhenti. Tekan Dengarkan untuk mencoba lagi.';};
+ window.speechSynthesis.speak(u);
+}
+lessonSpeakBtn.addEventListener('click',()=>{
+ if(!('speechSynthesis' in window)){lessonAudioStatus.textContent='Browser ini belum mendukung pembacaan suara. Coba buka file di Chrome.';return;}
+ stopLessonAudio('Menyiapkan audio…');
+ const title=lessonRoomTitle.textContent;
+ const clone=lessonRoomBody.cloneNode(true);clone.querySelectorAll('button').forEach(b=>b.remove());
+ const fullText=(title+'. '+clone.innerText).replace(/\s+/g,' ').trim();
+ if(!fullText){lessonAudioStatus.textContent='Materi belum tersedia untuk dibacakan.';return;}
+ // Pecah menjadi potongan pendek agar jeda/lanjut lebih stabil di browser HP.
+ lessonAudioChunks=fullText.match(/[^.!?]+[.!?]*/g)||[fullText];
+ lessonAudioChunks=lessonAudioChunks.map(x=>x.trim()).filter(Boolean);
+ lessonChunkIndex=0;lessonAudioPaused=false;const runId=++lessonAudioRunId;
+ lessonAudioButtons(true,false);speakLessonChunk(runId);
+});
+lessonPauseBtn.addEventListener('click',()=>{
+ if(!('speechSynthesis' in window)||!lessonAudioChunks.length)return;
+ if(!lessonAudioPaused){
+  lessonAudioPaused=true;
+  // Batalkan hanya potongan yang sedang dibaca; indeks tidak dinaikkan sehingga bisa dilanjutkan.
+  window.speechSynthesis.cancel();lessonUtterance=null;
+  lessonAudioButtons(true,true);lessonAudioStatus.textContent='Audio dijeda. Tekan “Lanjutkan” untuk meneruskan bagian ini.';
+ }else{
+  lessonAudioPaused=false;lessonAudioButtons(true,false);lessonAudioStatus.textContent='Melanjutkan audio…';
+  const runId=lessonAudioRunId;speakLessonChunk(runId);
+ }
+});
+lessonStopBtn.addEventListener('click',()=>stopLessonAudio());
+function lessonIllustration(title){
+ const t=title.toLowerCase();
+ let svg='';
+ if(t.includes('ritme')||t.includes('tempo')||t.includes('birama')||t.includes('not dan jeda')){
+  svg='<svg viewBox="0 0 320 145" xmlns="http://www.w3.org/2000/svg"><g stroke="currentColor" opacity=".35" stroke-width="1.5">'+[35,52,69,86,103].map(y=>'<path d="M12 '+y+' H308"/>').join('')+'</g><g fill="var(--accent)"><ellipse cx="54" cy="85" rx="8" ry="5" transform="rotate(-25 54 85)"/><path d="M61 84 V39 H67 V84"/><ellipse cx="118" cy="68" rx="8" ry="5" transform="rotate(-25 118 68)"/><path d="M125 67 V24 H131 V67"/><ellipse cx="183" cy="94" rx="8" ry="5" transform="rotate(-25 183 94)"/><path d="M190 93 V48 H196 V93"/><ellipse cx="247" cy="77" rx="8" ry="5" transform="rotate(-25 247 77)"/><path d="M254 76 V32 H260 V76"/></g><text x="160" y="132" fill="currentColor" font-size="12" text-anchor="middle">Dengarkan • Hitung • Tepuk</text></svg>';
+ } else if(t.includes('nada')||t.includes('tangga')||t.includes('interval')||t.includes('kunci')||t.includes('fretboard')){
+  svg='<svg viewBox="0 0 320 145" xmlns="http://www.w3.org/2000/svg"><g stroke="currentColor" opacity=".35" stroke-width="1.5">'+[34,50,66,82,98].map(y=>'<path d="M15 '+y+' H305"/>').join('')+'</g><g fill="var(--accent)" font-size="13" font-weight="700" text-anchor="middle">'+['Do','Re','Mi','Fa','Sol','La','Si'].map((n,i)=>'<circle cx="'+(28+i*44)+'" cy="'+(93-(i%4)*15)+'" r="11"/><text x="'+(28+i*44)+'" y="'+(97-(i%4)*15)+'" fill="#17200a" font-size="8">'+n+'</text>').join('')+'</g><text x="160" y="130" fill="currentColor" font-size="12" text-anchor="middle">Nada naik selangkah demi selangkah</text></svg>';
+ } else {
+  svg='<svg viewBox="0 0 320 145" xmlns="http://www.w3.org/2000/svg"><rect x="18" y="18" width="284" height="108" rx="16" fill="currentColor" opacity=".06"/><g stroke="var(--accent)" stroke-width="3" stroke-linecap="round">'+[0,1,2,3,4,5].map(i=>'<path d="M'+(48+i*42)+' 28 V116" opacity=".65"/>').join('')+'</g><g stroke="currentColor" stroke-width="1.5" opacity=".5">'+[0,1,2,3].map(i=>'<path d="M30 '+(43+i*21)+' H290"/>').join('')+'</g><circle cx="160" cy="77" r="24" fill="var(--accent)"/><text x="160" y="83" text-anchor="middle" fill="#17200a" font-size="18" font-weight="800">♪</text><text x="160" y="137" fill="currentColor" font-size="11" text-anchor="middle">Amati • Coba • Dengarkan</text></svg>';
+ }
+ return svg;
+}
+function openLessonRoom(summary){
+ const details=summary.closest('details');const card=summary.closest('.path-card');if(!details||!card)return;
+ activeLessonCard=card;lessonRoomTitle.textContent=card.querySelector('h3')?.textContent||'Pembelajaran';
+ lessonRoomBody.innerHTML='';const body=details.querySelector('.lesson-body');if(body)lessonRoomBody.appendChild(body.cloneNode(true));
+ lessonRoomArt.innerHTML=lessonIllustration(lessonRoomTitle.textContent);
+ lessonRoom.classList.add('active');lessonRoom.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';lessonRoom.scrollTop=0;
+}
+function closeLessonRoom(){stopLessonAudio('Audio berhenti saat keluar dari materi.');lessonRoom.classList.remove('active');lessonRoom.setAttribute('aria-hidden','true');document.body.style.overflow='';activeLessonCard=null}
+document.querySelectorAll('#pathSteps .path-card details summary').forEach(summary=>{summary.addEventListener('click',e=>{e.preventDefault();openLessonRoom(summary)})});
+document.getElementById('lessonRoomBack').addEventListener('click',closeLessonRoom);document.getElementById('lessonRoomBackBottom').addEventListener('click',closeLessonRoom);
+document.getElementById('lessonRoomDone').addEventListener('click',()=>{if(!activeLessonCard)return;const original=activeLessonCard.querySelector('.path-check');if(original)original.click();document.getElementById('lessonRoomDone').textContent=original?.getAttribute('aria-pressed')==='true'?'✓ Tahap selesai':'✓ Tandai tahap selesai'});
+// Checklist tahap urutan belajar, terpisah dari sesi harian.
+const pathDone=new Set(JSON.parse(localStorage.getItem('senarPathDone')||'[]'));
+const pathCards=[...document.querySelectorAll('#pathSteps .path-card')];
+pathCards.forEach((card,i)=>{const b=document.createElement('button');b.type='button';b.className='path-check';b.textContent=pathDone.has(i)?'✓ Selesai':'Tandai selesai';b.setAttribute('aria-pressed',pathDone.has(i)?'true':'false');card.appendChild(b);b.onclick=()=>{if(pathDone.has(i))pathDone.delete(i);else pathDone.add(i);localStorage.setItem('senarPathDone',JSON.stringify([...pathDone]));b.textContent=pathDone.has(i)?'✓ Selesai':'Tandai selesai';b.setAttribute('aria-pressed',pathDone.has(i)?'true':'false');updatePathProgress()}});
+function updatePathProgress(){const n=pathCards.filter((card,i)=>pathDone.has(i)).length;document.getElementById('pathProgressFill').style.width=(n/pathCards.length*100)+'%';document.getElementById('pathProgressText').textContent=n+' dari '+pathCards.length+' tahap selesai'}
+updatePathProgress();
+const oldUpdateStats=updateStats;
+updateStats=function(){oldUpdateStats();const a=document.getElementById('profileChords'),b=document.getElementById('profileLessons'),c=document.getElementById('profileCatalog');if(a)a.textContent=mastered.size;if(b)b.textContent=completed.size+' / 3';if(c)c.textContent=chordData.length};
+updateStats();
+</script>
+
+<script>
+(()=>{
+ const $=id=>document.getElementById(id);
+ const fallbackAvatar="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' rx='40' fill='%23292d23'/%3E%3Ccircle cx='40' cy='29' r='14' fill='%23c9f36a'/%3E%3Cpath d='M13 72c2-17 13-25 27-25s25 8 27 25' fill='%23c9f36a'/%3E%3C/svg%3E";
+ let avatar=localStorage.getItem('senarProfileAvatar')||fallbackAvatar;
+ let banner=localStorage.getItem('senarProfileBanner')||'';
+ let profileName=localStorage.getItem('senarProfileName')||'Pemain SENAR';
+ let sourceImage=null, cropType='avatar', cropX=0,cropY=0,dragging=false,lastX=0,lastY=0,zoom=1,previewData='';
+ function paint(){ $('drawerProfileName').textContent=profileName; $('drawerProfileAvatar').src=avatar; $('profileNameInput').value=profileName; $('profileAvatarPreview').src=avatar; $('profileBannerPreview').style.backgroundImage=banner?`url("${banner}")`:'linear-gradient(120deg,#292d23,#171a16)'; $('drawerProfile').style.setProperty('--profile-banner',banner?`url("${banner}")`:'linear-gradient(120deg,#292d23,#171a16)'); }
+ paint();
+ $('editAvatarPencil').onclick=()=>$('avatarFile').click(); $('editBannerPencil').onclick=()=>$('bannerFile').click(); $('removeBanner').onclick=()=>{banner='';paint();$('profileSaveStatus').textContent='Banner dihapus dari pratinjau. Tekan Simpan profil untuk menyimpan.'};
+ function loadFile(input,type){const f=input.files&&input.files[0];if(!f)return;if(!f.type.startsWith('image/')){alert('Pilih file gambar ya.');return}const reader=new FileReader();reader.onload=()=>{const im=new Image();im.onload=()=>{sourceImage=im;cropType=type;cropX=0;cropY=0;zoom=1;previewData='';$('cropImage').src=reader.result;$('cropImage').style.width='auto';$('cropImage').style.height='auto';$('cropZoom').value=1;$('cropTitle').textContent=type==='avatar'?'Atur crop foto profil':'Atur crop banner';$('profileCropTool').hidden=false;$('profileCropTool').dataset.cropType=type;drawCrop();$('profileCropTool').scrollIntoView({behavior:'smooth',block:'start'});};im.src=reader.result;};reader.readAsDataURL(f);input.value='';}
+ $('avatarFile').onchange=()=>loadFile($('avatarFile'),'avatar'); $('bannerFile').onchange=()=>loadFile($('bannerFile'),'banner');
+ function cropFrame(){const stage=$('cropStage'),w=stage.clientWidth,h=stage.clientHeight;const inset=cropType==='avatar'?Math.min(w,h)*.08:4;return {x:inset,y:inset,w:w-inset*2,h:h-inset*2};}
+ function drawCrop(){if(!sourceImage)return;const stage=$('cropStage'),img=$('cropImage'),f=cropFrame();const scale=Math.max(f.w/sourceImage.width,f.h/sourceImage.height)*zoom;const iw=sourceImage.width*scale,ih=sourceImage.height*scale;img.style.width=iw+'px';img.style.height=ih+'px';const minX=f.x+f.w-(stage.clientWidth+iw)/2, maxX=f.x-(stage.clientWidth-iw)/2;const minY=f.y+f.h-(stage.clientHeight+ih)/2, maxY=f.y-(stage.clientHeight-ih)/2;cropX=Math.max(minX,Math.min(maxX,cropX));cropY=Math.max(minY,Math.min(maxY,cropY));img.style.transform=`translate(${cropX}px,${cropY}px)`;img.style.objectFit='fill';}
+ $('cropZoom').oninput=e=>{zoom=+e.target.value;drawCrop()};$('cropStage').addEventListener('pointerdown',e=>{if(!sourceImage)return;dragging=true;lastX=e.clientX;lastY=e.clientY;$('cropStage').setPointerCapture(e.pointerId)});$('cropStage').addEventListener('pointermove',e=>{if(!dragging)return;cropX+=e.clientX-lastX;cropY+=e.clientY-lastY;lastX=e.clientX;lastY=e.clientY;drawCrop()});['pointerup','pointercancel'].forEach(n=>$('cropStage').addEventListener(n,()=>dragging=false));window.addEventListener('resize',drawCrop);
+ function makeCrop(){if(!sourceImage)return null;const stage=$('cropStage'),img=$('cropImage'),f=cropFrame();const outW=cropType==='avatar'?480:1200,outH=cropType==='avatar'?480:400;const scale=img.clientWidth/sourceImage.width;const iw=sourceImage.width*scale,ih=sourceImage.height*scale;const left=(stage.clientWidth-iw)/2+cropX,top=(stage.clientHeight-ih)/2+cropY;let sx=(f.x-left)/scale,sy=(f.y-top)/scale,sw=f.w/scale,sh=f.h/scale;sx=Math.max(0,Math.min(sourceImage.width-sw,sx));sy=Math.max(0,Math.min(sourceImage.height-sh,sy));sw=Math.min(sw,sourceImage.width);sh=Math.min(sh,sourceImage.height);const c=document.createElement('canvas');c.width=outW;c.height=outH;const ctx=c.getContext('2d');ctx.drawImage(sourceImage,sx,sy,sw,sh,0,0,outW,outH);return c.toDataURL('image/jpeg',.9)}
+ $('applyCrop').onclick=()=>{const data=makeCrop();if(!data)return;if(cropType==='avatar')avatar=data;else banner=data;previewData=data;paint();$('profileCropTool').hidden=true;$('profileSaveStatus').textContent='Pratinjau diperbarui. Tekan Simpan profil untuk menyimpan.'};$('cancelCrop').onclick=()=> $('profileCropTool').hidden=true; $('closeCrop').onclick=()=> $('profileCropTool').hidden=true; $('profileCropTool').addEventListener('click',e=>{if(e.target===$('profileCropTool'))$('profileCropTool').hidden=true}); document.addEventListener('keydown',e=>{if(e.key==='Escape')$('profileCropTool').hidden=true});
+ $('saveProfile').onclick=()=>{profileName=$('profileNameInput').value.trim()||'Pemain SENAR';try{localStorage.setItem('senarProfileName',profileName);localStorage.setItem('senarProfileAvatar',avatar);localStorage.setItem('senarProfileBanner',banner);paint();$('profileSaveStatus').textContent='✓ Profil tersimpan di browser perangkat ini.'}catch(e){$('profileSaveStatus').textContent='Penyimpanan penuh. Coba pilih foto dengan ukuran lebih kecil.'}};
+ $('resetProfile').onclick=()=>{if(!confirm('Atur ulang nama, foto, dan banner ke tampilan awal?'))return;avatar=fallbackAvatar;banner='';profileName='Pemain SENAR';localStorage.removeItem('senarProfileAvatar');localStorage.removeItem('senarProfileBanner');localStorage.removeItem('senarProfileName');paint();$('profileSaveStatus').textContent='Profil dikembalikan ke tampilan awal.'};
+})();
+</script>
+
+</body>
+</html>
